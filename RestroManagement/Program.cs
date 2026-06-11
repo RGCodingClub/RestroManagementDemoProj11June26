@@ -1,8 +1,13 @@
+using Microsoft.EntityFrameworkCore;
+using RestroManagement.Data;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
-
+builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
+builder.Services.AddDbContext<AppDBContext>(options =>
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("DefaultConStr")));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
