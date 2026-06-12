@@ -1,0 +1,100 @@
+@model IEnumerable<RestroManagement.DbModels.Order>
+
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<h2 class="fw-bold mb-4">Dashboard Overview</h2>
+
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card p-3 bg-primary text-white">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h6 class="text-white-50">Total Revenue</h6>
+                    <h3 class="fw-bold mb-0">₹@ViewBag.TotalRevenue</h3>
+                </div>
+                <i class="bi bi-currency-rupee fs-1 opacity-50"></i>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card p-3 bg-success text-white">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h6 class="text-white-50">Total Orders</h6>
+                    <h3 class="fw-bold mb-0">@ViewBag.OrderCount</h3>
+                </div>
+                <i class="bi bi-cart-check fs-1 opacity-50"></i>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card p-3 bg-info text-white">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h6 class="text-white-50">Food Items</h6>
+                    <h3 class="fw-bold mb-0">@ViewBag.FoodItemCount</h3>
+                </div>
+                <i class="bi bi-egg-fried fs-1 opacity-50"></i>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card p-3 bg-warning text-white">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h6 class="text-white-50">Categories</h6>
+                    <h3 class="fw-bold mb-0">@ViewBag.CategoryCount</h3>
+                </div>
+                <i class="bi bi-tags fs-1 opacity-50"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card p-4">
+            <h5 class="fw-bold mb-4">Recent Orders</h5>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Customer</th>
+                            <th>Date</th>
+                            <th>Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var order in Model) {
+                        <tr>
+                            <td>#@order.Id</td>
+                            <td>@order.CustomerName</td>
+                            <td>@order.OrderDate.ToString("g")</td>
+                            <td class="fw-bold">₹@order.OrderTotal</td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card p-4">
+            <h5 class="fw-bold mb-4">Quick Actions</h5>
+            <div class="d-grid gap-2">
+                <a asp-controller="FoodItems" asp-action="Create" class="btn btn-outline-primary text-start">
+                    <i class="bi bi-plus-circle me-2"></i> Add New Food Item
+                </a>
+                <a asp-controller="Categories" asp-action="Create" class="btn btn-outline-secondary text-start">
+                    <i class="bi bi-tag me-2"></i> Add New Category
+                </a>
+                <a asp-controller="FoodItems" asp-action="Index" class="btn btn-outline-info text-start">
+                    <i class="bi bi-list-ul me-2"></i> View All Items
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

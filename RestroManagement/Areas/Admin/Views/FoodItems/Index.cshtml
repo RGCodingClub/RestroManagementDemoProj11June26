@@ -1,0 +1,86 @@
+@model IEnumerable<RestroManagement.DbModels.FoodItem>
+
+@{
+    ViewData["Title"] = "Food Items";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold m-0">Food Items</h2>
+    <a asp-action="Create" class="btn btn-primary">
+        <i class="bi bi-plus-lg"></i> Add New Food Item
+    </a>
+</div>
+
+<div class="card p-4">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Item</th>
+                    <th>Categories</th>
+                    <th>Dietary</th>
+                    <th>Pricing</th>
+                    <th>Status</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model) {
+                <tr>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            @if (!string.IsNullOrEmpty(item.ImageUrl)) {
+                                <img src="@item.ImageUrl" class="rounded me-3" style="width: 40px; height: 40px; object-fit: cover;" alt="">
+                            } else {
+                                <div class="bg-light rounded d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                                    <i class="bi bi-image text-muted"></i>
+                                </div>
+                            }
+                            <div>
+                                <div class="fw-bold">@item.Name</div>
+                                <small class="text-muted">ID: #@item.Id</small>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        @foreach (var cat in item.Categories ?? new List<RestroManagement.DbModels.FoodItemCategory>()) {
+                            <span class="badge bg-info text-dark small me-1">@cat.Category?.Name</span>
+                        }
+                    </td>
+                    <td>
+                        <span class="badge @(item.DietaryPreference == RestroManagement.DbModels.DietaryPreference.Vegetarian ? "bg-success" : "bg-danger")">
+                            @item.DietaryPreference
+                        </span>
+                    </td>
+                    <td>
+                        <small class="text-muted d-block">Method: @item.PriceCalculationMethod</small>
+                        @if (item.Portions != null && item.Portions.Any()) {
+                            @foreach (var p in item.Portions) {
+                                <span class="badge border text-dark me-1">@p.Name: ₹@p.Price</span>
+                            }
+                        } else {
+                            <span class="text-warning small italic">No portions added</span>
+                        }
+                    </td>
+                    <td>
+                        @if (item.IsAvailable) {
+                            <span class="badge bg-success-subtle text-success border border-success-subtle px-3">Available</span>
+                        } else {
+                            <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-3">Out of Stock</span>
+                        }
+                    </td>
+                    <td class="text-end">
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary me-2">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger" 
+                           onclick="return confirm('Delete this food item?')">
+                            <i class="bi bi-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
