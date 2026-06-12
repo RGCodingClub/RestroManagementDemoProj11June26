@@ -9,10 +9,12 @@ namespace RestroManagement.Areas.Admin.Controllers
     public class CategoriesController : Controller
     {
         private readonly AppDBContext _context;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public CategoriesController(AppDBContext context)
+        public CategoriesController(AppDBContext context, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         public async Task<IActionResult> Index()
@@ -28,10 +30,14 @@ namespace RestroManagement.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(MenuCategory category)
+        public async Task<IActionResult> Create(MenuCategory category, IFormFile? imageFile)
         {
             if (ModelState.IsValid)
             {
+                if (imageFile != null)
+                {
+                    category.ImageUrl = await SaveImage(imageFile);
+                }
                 _context.Add(category);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -49,17 +55,38 @@ namespace RestroManagement.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, MenuCategory category)
+        public async Task<IActionResult> Edit(int id, MenuCategory category, IFormFile? imageFile)
         {
             if (id != category.Id) return NotFound();
 
             if (ModelState.IsValid)
             {
+                if (imageFile != null)
+                {
+                    category.ImageUrl = await SaveImage(imageFile);
+                }
                 _context.Update(category);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(category);
+        }
+
+        private async Task<string> SaveImage(IFormFile file)
+        {
+            string wwwRootPath = _webHostEnvironment.WebRootPath;
+            string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+            string path = Path.Combine(wwwRootPath, @"images\categories", fileName);
+
+            // Ensure directory exists
+            Directory.CreateDirectory(Path.GetDirectoryName(path)!);
+
+            using (var fileStream = new FileStream(path, FileMode.Create))
+            {
+                await file.CopyToAsync(fileStream);
+            }
+
+            return @"/images/categories/" + fileName;
         }
 
         public async Task<IActionResult> Delete(int? id)

@@ -9,10 +9,12 @@ namespace RestroManagement.Areas.Admin.Controllers
     public class FoodItemsController : Controller
     {
         private readonly AppDBContext _context;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public FoodItemsController(AppDBContext context)
+        public FoodItemsController(AppDBContext context, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         public async Task<IActionResult> Index()
@@ -34,13 +36,18 @@ namespace RestroManagement.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(FoodItem item, int[] selectedCategories)
+        public async Task<IActionResult> Create(FoodItem item, int[] selectedCategories, IFormFile? imageFile)
         {
             item.Created = DateTime.Now;
             item.LastUpdated = DateTime.Now;
 
             if (ModelState.IsValid)
             {
+                if (imageFile != null)
+                {
+                    item.ImageUrl = await SaveImage(imageFile);
+                }
+
                 _context.Add(item);
                 await _context.SaveChangesAsync();
 
@@ -77,7 +84,7 @@ namespace RestroManagement.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, FoodItem item, int[] selectedCategories)
+        public async Task<IActionResult> Edit(int id, FoodItem item, int[] selectedCategories, IFormFile? imageFile)
         {
             if (id != item.Id) return NotFound();
 
@@ -86,9 +93,13 @@ namespace RestroManagement.Areas.Admin.Controllers
                 var existingItem = await _context.Fooditems.Include(f => f.Categories).FirstOrDefaultAsync(f => f.Id == id);
                 if (existingItem == null) return NotFound();
 
+                if (imageFile != null)
+                {
+                    existingItem.ImageUrl = await SaveImage(imageFile);
+                }
+
                 existingItem.Name = item.Name;
                 existingItem.Description = item.Description;
-                existingItem.ImageUrl = item.ImageUrl;
                 existingItem.DietaryPreference = item.DietaryPreference;
                 existingItem.PriceCalculationMethod = item.PriceCalculationMethod;
                 existingItem.IsAvailable = item.IsAvailable;
@@ -110,6 +121,20 @@ namespace RestroManagement.Areas.Admin.Controllers
 
             ViewBag.Categories = await _context.MenuCategories.OrderBy(c => c.DisplayOrder).ToListAsync();
             return View(item);
+        }
+
+        private async Task<string> SaveImage(IFormFile file)
+        {
+            string wwwRootPath = _webHostEnvironment.WebRootPath;
+            string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+            string path = Path.Combine(wwwRootPath, @"images\food", fileName);
+
+            using (var fileStream = new FileStream(path, FileMode.Create))
+            {
+                await file.CopyToAsync(fileStream);
+            }
+
+            return @"/images/food/" + fileName;
         }
 
         [HttpPost]
