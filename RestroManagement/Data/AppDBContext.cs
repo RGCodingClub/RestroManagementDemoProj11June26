@@ -16,6 +16,7 @@ namespace RestroManagement.Data
         public DbSet<MenuCategory> MenuCategories { get; set; }
         public DbSet<FoodItemCategory> FoodItemCategories { get; set; }
         public DbSet<FoodItemPortion> FoodItemPortions { get; set; }
+        public DbSet<FoodItemImage> FoodItemImages { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

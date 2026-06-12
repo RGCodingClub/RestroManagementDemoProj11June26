@@ -26,11 +26,12 @@
             </thead>
             <tbody>
                 @foreach (var item in Model) {
+                    var primaryImage = item.Images?.FirstOrDefault(i => i.IsPrimary) ?? item.Images?.FirstOrDefault();
                 <tr>
                     <td>
                         <div class="d-flex align-items-center">
-                            @if (!string.IsNullOrEmpty(item.ImageUrl)) {
-                                <img src="@item.ImageUrl" class="rounded me-3" style="width: 40px; height: 40px; object-fit: cover;" alt="">
+                            @if (primaryImage != null) {
+                                <img src="@primaryImage.ImageUrl" class="rounded me-3" style="width: 40px; height: 40px; object-fit: cover;" alt="">
                             } else {
                                 <div class="bg-light rounded d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
                                     <i class="bi bi-image text-muted"></i>

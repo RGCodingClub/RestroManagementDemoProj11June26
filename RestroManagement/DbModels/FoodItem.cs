@@ -14,7 +14,6 @@ namespace RestroManagement.DbModels
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
-        public string? ImageUrl { get; set; }
         public DietaryPreference DietaryPreference { get; set; }
         public bool IsAvailable { get; set; }
         
@@ -27,5 +26,6 @@ namespace RestroManagement.DbModels
         // Navigation properties
         public ICollection<FoodItemPortion>? Portions { get; set; }
         public ICollection<FoodItemCategory>? Categories { get; set; }
+        public ICollection<FoodItemImage>? Images { get; set; }
     }
 }
