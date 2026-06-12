@@ -12,9 +12,12 @@ namespace RestroManagement.DbModels
         [ForeignKey("FoodItemId")]
         public FoodItem? FoodItem { get; set; }
 
+        public int? FoodItemPortionId { get; set; }
+        [ForeignKey("FoodItemPortionId")]
+        public FoodItemPortion? Portion { get; set; }
+
         public float Quantity { get; set; }
 
-        [NotMapped]
-        public float Price { get { return FoodItem?.PricePerUnity ?? 0 * Quantity; } }
+        public float Price { get; set; } // Stored price snapshot
     }
 }
