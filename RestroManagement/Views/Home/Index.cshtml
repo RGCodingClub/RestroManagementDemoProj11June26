@@ -1,8 +1,263 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+@{
+    ViewData["Title"] = "The Future of Restaurant Management";
+    Layout = "_LandingLayout";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<!-- Hero Section -->
+<section class="hero">
+    <div class="container flex" style="align-items: center; gap: 60px;">
+        <div class="hero-content" data-animate>
+            <h1>Serve Faster. <span class="gradient-text">Grow Bigger.</span></h1>
+            <p>The all-in-one cloud platform that helps restaurants reduce costs, increase table turnover, and delight every guest. Join 10,000+ restaurants already scaling with Restro.</p>
+            <div class="flex" style="gap: 15px;">
+                <a asp-controller="Account" asp-action="Register" class="btn btn-primary">Start Free Trial</a>
+                <a href="#features" class="btn btn-outline">Watch Product Tour</a>
+            </div>
+            <div class="flex" style="margin-top: 40px; gap: 30px; font-size: 14px; color: var(--text-muted);">
+                <span class="flex-center" style="gap: 8px;"><i class="bi bi-check-circle-fill text-success"></i> No credit card required</span>
+                <span class="flex-center" style="gap: 8px;"><i class="bi bi-check-circle-fill text-success"></i> Setup in 5 minutes</span>
+            </div>
+        </div>
+        <div class="hero-image" style="flex: 1; position: relative;" data-animate>
+            <!-- CSS Mockup of Dashboard -->
+            <div style="background: #f0f0f0; border-radius: 20px; padding: 15px; box-shadow: 0 40px 80px rgba(0,0,0,0.1); border: 8px solid #333;">
+                <div style="background: white; border-radius: 12px; height: 350px; overflow: hidden; display: flex; flex-direction: column;">
+                    <div style="height: 40px; border-bottom: 1px solid #eee; display: flex; align-items: center; padding: 0 15px; gap: 10px;">
+                        <div style="width: 10px; height: 10px; border-radius: 50%; background: #ff5f56;"></div>
+                        <div style="width: 10px; height: 10px; border-radius: 50%; background: #ffbd2e;"></div>
+                        <div style="width: 10px; height: 10px; border-radius: 50%; background: #27c93f;"></div>
+                    </div>
+                    <div style="flex: 1; padding: 20px;">
+                        <div class="grid" style="grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 20px;">
+                            <div style="height: 60px; background: #f8f9fa; border-radius: 8px;"></div>
+                            <div style="height: 60px; background: #f8f9fa; border-radius: 8px;"></div>
+                            <div style="height: 60px; background: #f8f9fa; border-radius: 8px;"></div>
+                        </div>
+                        <div style="height: 150px; background: #f8f9fa; border-radius: 12px; position: relative; overflow: hidden;">
+                            <div style="position: absolute; bottom: 0; left: 0; right: 0; height: 100px; background: linear-gradient(0deg, var(--primary) 0%, transparent 100%); opacity: 0.1;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Floating Stats Card -->
+            <div class="glass" style="position: absolute; bottom: -20px; left: -20px; padding: 20px; border-radius: 16px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); width: 200px;">
+                <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 5px;">Daily Revenue</div>
+                <div style="font-size: 24px; font-weight: 800; color: var(--success);">$4,280.50</div>
+                <div style="font-size: 11px; color: var(--success); margin-top: 5px;"><i class="bi bi-graph-up"></i> +12% from yesterday</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Trusted By Section -->
+<section style="padding: 40px 0; border-bottom: 1px solid #eee;">
+    <div class="container text-center">
+        <p style="text-transform: uppercase; letter-spacing: 2px; font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 30px;">Trusted by world-class restaurant brands</p>
+        <div class="flex-center" style="gap: 60px; flex-wrap: wrap; opacity: 0.5; filter: grayscale(1);">
+            <div style="font-size: 24px; font-weight: 900;">BistroExpress</div>
+            <div style="font-size: 24px; font-weight: 900;">CloudCafe</div>
+            <div style="font-size: 24px; font-weight: 900;">UrbanDine</div>
+            <div style="font-size: 24px; font-weight: 900;">SushiHouse</div>
+            <div style="font-size: 24px; font-weight: 900;">SteakPoint</div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section id="features">
+    <div class="container">
+        <div class="text-center" style="max-width: 700px; margin: 0 auto 80px;" data-animate>
+            <h2 style="font-size: 2.5rem; margin-bottom: 20px;">Everything you need to run a <span class="gradient-text">modern restaurant.</span></h2>
+            <p style="color: var(--text-muted); font-size: 1.1rem;">Powerful features designed to solve real operational challenges. No complex integration, just plug and play.</p>
+        </div>
+
+        <div class="grid features-grid">
+            <div class="card" data-animate>
+                <div class="feature-icon"><i class="bi bi-qr-code-scan"></i></div>
+                <h3>QR Code Ordering</h3>
+                <p style="color: var(--text-muted);">Let customers scan, view menu, and order directly from their table. Reduce wait times and human errors.</p>
+            </div>
+            <div class="card" data-animate>
+                <div class="feature-icon"><i class="bi bi-display"></i></div>
+                <h3>Kitchen Display (KDS)</h3>
+                <p style="color: var(--text-muted);">Eliminate paper tickets. Real-time order tracking for chefs to ensure perfect timing and communication.</p>
+            </div>
+            <div class="card" data-animate>
+                <div class="feature-icon"><i class="bi bi-box-seam"></i></div>
+                <h3>Smart Inventory</h3>
+                <p style="color: var(--text-muted);">Track ingredients down to the gram. Automated low-stock alerts and wastage reports.</p>
+            </div>
+            <div class="card" data-animate>
+                <div class="feature-icon"><i class="bi bi-graph-up-arrow"></i></div>
+                <h3>Live Analytics</h3>
+                <p style="color: var(--text-muted);">Beautiful dashboards showing revenue, best-sellers, and peak hours in real-time from anywhere.</p>
+            </div>
+            <div class="card" data-animate>
+                <div class="feature-icon"><i class="bi bi-people"></i></div>
+                <h3>Multi-Outlet</h3>
+                <p style="color: var(--text-muted);">Manage 1 or 100 locations from a single dashboard. Centralized menu and staff management.</p>
+            </div>
+            <div class="card" data-animate>
+                <div class="feature-icon"><i class="bi bi-shield-check"></i></div>
+                <h3>Enterprise Security</h3>
+                <p style="color: var(--text-muted);">PCI-compliant payments, automated backups, and 99.99% uptime for your business continuity.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Hardware Showcase -->
+<section id="hardware" class="hardware-showcase">
+    <div class="container flex" style="align-items: center; gap: 80px;">
+        <div style="flex: 1;" data-animate>
+            <h2 style="font-size: 2.5rem; margin-bottom: 24px;">Hardware that works <span style="color: var(--secondary);">with your workflow.</span></h2>
+            <p style="color: rgba(255,255,255,0.7); margin-bottom: 40px; font-size: 1.1rem;">Whether you need a full POS setup or just a kitchen tablet, our platform is compatible with industry-leading hardware.</p>
+            
+            <ul style="list-style: none;">
+                <li class="flex" style="gap: 15px; margin-bottom: 20px;">
+                    <div style="color: var(--secondary); font-size: 20px;"><i class="bi bi-laptop"></i></div>
+                    <div>
+                        <strong style="display: block; font-size: 18px;">Self Ordering Kiosks</strong>
+                        <span style="color: rgba(255,255,255,0.6);">Reduce labor costs and increase ticket size.</span>
+                    </div>
+                </li>
+                <li class="flex" style="gap: 15px; margin-bottom: 20px;">
+                    <div style="color: var(--secondary); font-size: 20px;"><i class="bi bi-printer"></i></div>
+                    <div>
+                        <strong style="display: block; font-size: 18px;">Thermal Receipt Printers</strong>
+                        <span style="color: rgba(255,255,255,0.6);">Fast, reliable, and cloud-integrated printing.</span>
+                    </div>
+                </li>
+                <li class="flex" style="gap: 15px;">
+                    <div style="color: var(--secondary); font-size: 20px;"><i class="bi bi-tablet"></i></div>
+                    <div>
+                        <strong style="display: block; font-size: 18px;">Kitchen Display Screens</strong>
+                        <span style="color: rgba(255,255,255,0.6);">Durable touch screens for heavy kitchen use.</span>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div style="flex: 1; display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;" data-animate>
+            <div style="background: rgba(255,255,255,0.05); padding: 30px; border-radius: 20px; text-align: center;">
+                <i class="bi bi-pc-display-horizontal" style="font-size: 40px; color: var(--secondary);"></i>
+                <div style="margin-top: 15px; font-weight: 600;">Cashier POS</div>
+            </div>
+            <div style="background: rgba(255,255,255,0.05); padding: 30px; border-radius: 20px; text-align: center;">
+                <i class="bi bi-phone" style="font-size: 40px; color: var(--secondary);"></i>
+                <div style="margin-top: 15px; font-weight: 600;">Waiter App</div>
+            </div>
+            <div style="background: rgba(255,255,255,0.05); padding: 30px; border-radius: 20px; text-align: center;">
+                <i class="bi bi-aspect-ratio" style="font-size: 40px; color: var(--secondary);"></i>
+                <div style="margin-top: 15px; font-weight: 600;">Customer Display</div>
+            </div>
+            <div style="background: rgba(255,255,255,0.05); padding: 30px; border-radius: 20px; text-align: center;">
+                <i class="bi bi-qr-code" style="font-size: 40px; color: var(--secondary);"></i>
+                <div style="margin-top: 15px; font-weight: 600;">Table QR</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works / Workflow -->
+<section id="workflow" style="background: var(--light-bg);">
+    <div class="container">
+        <div class="text-center" style="margin-bottom: 80px;" data-animate>
+            <h2 style="font-size: 2.5rem; margin-bottom: 20px;">A seamless <span class="gradient-text">dining journey.</span></h2>
+            <p style="color: var(--text-muted);">From the moment a guest enters to the final bill, we handle everything.</p>
+        </div>
+
+        <div class="flex" style="justify-content: space-between; position: relative;">
+            <!-- Connector Line -->
+            <div style="position: absolute; top: 40px; left: 10%; right: 10%; height: 2px; background: dashed #ddd; border-top: 2px dashed #ddd; z-index: 1;"></div>
+            
+            <div class="text-center" style="flex: 1; z-index: 2;" data-animate>
+                <div class="flex-center" style="width: 80px; height: 80px; background: var(--white); border-radius: 50%; margin: 0 auto 20px; border: 4px solid var(--primary); font-size: 28px; color: var(--primary);">1</div>
+                <h4 style="margin-bottom: 10px;">Scan & Order</h4>
+                <p style="font-size: 14px; color: var(--text-muted); padding: 0 15px;">Guest scans QR and picks items from the digital menu.</p>
+            </div>
+            <div class="text-center" style="flex: 1; z-index: 2;" data-animate>
+                <div class="flex-center" style="width: 80px; height: 80px; background: var(--white); border-radius: 50%; margin: 0 auto 20px; border: 4px solid var(--primary); font-size: 28px; color: var(--primary);">2</div>
+                <h4 style="margin-bottom: 10px;">Kitchen Prep</h4>
+                <p style="font-size: 14px; color: var(--text-muted); padding: 0 15px;">Chef receives order on KDS instantly and starts cooking.</p>
+            </div>
+            <div class="text-center" style="flex: 1; z-index: 2;" data-animate>
+                <div class="flex-center" style="width: 80px; height: 80px; background: var(--white); border-radius: 50%; margin: 0 auto 20px; border: 4px solid var(--primary); font-size: 28px; color: var(--primary);">3</div>
+                <h4 style="margin-bottom: 10px;">Serve & Enjoy</h4>
+                <p style="font-size: 14px; color: var(--text-muted); padding: 0 15px;">Waiter is notified to pick up and serve the hot meal.</p>
+            </div>
+            <div class="text-center" style="flex: 1; z-index: 2;" data-animate>
+                <div class="flex-center" style="width: 80px; height: 80px; background: var(--white); border-radius: 50%; margin: 0 auto 20px; border: 4px solid var(--primary); font-size: 28px; color: var(--primary);">4</div>
+                <h4 style="margin-bottom: 10px;">Digital Pay</h4>
+                <p style="font-size: 14px; color: var(--text-muted); padding: 0 15px;">Guest pays via phone. Analytics sync to your dashboard.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Pricing Section -->
+<section id="pricing">
+    <div class="container">
+        <div class="text-center" style="margin-bottom: 80px;" data-animate>
+            <h2 style="font-size: 2.5rem; margin-bottom: 20px;">Simple, transparent <span class="gradient-text">pricing.</span></h2>
+            <p style="color: var(--text-muted);">No hidden fees. Scale as you grow.</p>
+        </div>
+
+        <div class="grid pricing-grid">
+            <div class="card pricing-card" data-animate>
+                <div style="font-weight: 700; color: var(--text-muted); margin-bottom: 15px; text-transform: uppercase; font-size: 12px; letter-spacing: 1px;">Starter</div>
+                <div style="font-size: 48px; font-weight: 800; margin-bottom: 10px;">$29<span style="font-size: 16px; color: var(--text-muted);">/mo</span></div>
+                <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 30px;">Perfect for small cafes and cloud kitchens.</p>
+                <ul style="list-style: none; margin-bottom: 40px; font-size: 15px;">
+                    <li style="margin-bottom: 12px;"><i class="bi bi-check2 text-success" style="margin-right: 10px;"></i> 1 Outlet</li>
+                    <li style="margin-bottom: 12px;"><i class="bi bi-check2 text-success" style="margin-right: 10px;"></i> Unlimited Staff</li>
+                    <li style="margin-bottom: 12px;"><i class="bi bi-check2 text-success" style="margin-right: 10px;"></i> QR Table Ordering</li>
+                    <li style="margin-bottom: 12px;"><i class="bi bi-check2 text-success" style="margin-right: 10px;"></i> Digital Menu</li>
+                    <li style="color: #ccc;"><i class="bi bi-x" style="margin-right: 10px;"></i> KDS System</li>
+                </ul>
+                <a href="#" class="btn btn-outline" style="width: 100%; text-align: center;">Get Started</a>
+            </div>
+
+            <div class="card pricing-card featured" data-animate>
+                <div style="display: inline-block; background: var(--primary); color: white; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; margin-bottom: 15px;">MOST POPULAR</div>
+                <div style="font-weight: 700; color: var(--text-muted); margin-bottom: 10px; text-transform: uppercase; font-size: 12px; letter-spacing: 1px;">Professional</div>
+                <div style="font-size: 48px; font-weight: 800; margin-bottom: 10px;">$79<span style="font-size: 16px; color: var(--text-muted);">/mo</span></div>
+                <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 30px;">Ideal for family restaurants and busy venues.</p>
+                <ul style="list-style: none; margin-bottom: 40px; font-size: 15px;">
+                    <li style="margin-bottom: 12px;"><i class="bi bi-check2 text-success" style="margin-right: 10px;"></i> Up to 3 Outlets</li>
+                    <li style="margin-bottom: 12px;"><i class="bi bi-check2 text-success" style="margin-right: 10px;"></i> Everything in Starter</li>
+                    <li style="margin-bottom: 12px;"><i class="bi bi-check2 text-success" style="margin-right: 10px;"></i> Kitchen Display (KDS)</li>
+                    <li style="margin-bottom: 12px;"><i class="bi bi-check2 text-success" style="margin-right: 10px;"></i> Inventory Management</li>
+                    <li style="margin-bottom: 12px;"><i class="bi bi-check2 text-success" style="margin-right: 10px;"></i> Advanced Analytics</li>
+                </ul>
+                <a href="#" class="btn btn-primary" style="width: 100%; text-align: center;">Get Started</a>
+            </div>
+
+            <div class="card pricing-card" data-animate>
+                <div style="font-weight: 700; color: var(--text-muted); margin-bottom: 15px; text-transform: uppercase; font-size: 12px; letter-spacing: 1px;">Enterprise</div>
+                <div style="font-size: 48px; font-weight: 800; margin-bottom: 10px;">Custom</div>
+                <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 30px;">For multi-location chains and franchises.</p>
+                <ul style="list-style: none; margin-bottom: 40px; font-size: 15px;">
+                    <li style="margin-bottom: 12px;"><i class="bi bi-check2 text-success" style="margin-right: 10px;"></i> Unlimited Outlets</li>
+                    <li style="margin-bottom: 12px;"><i class="bi bi-check2 text-success" style="margin-right: 10px;"></i> Centralized Management</li>
+                    <li style="margin-bottom: 12px;"><i class="bi bi-check2 text-success" style="margin-right: 10px;"></i> White-label Solution</li>
+                    <li style="margin-bottom: 12px;"><i class="bi bi-check2 text-success" style="margin-right: 10px;"></i> 24/7 Priority Support</li>
+                    <li style="margin-bottom: 12px;"><i class="bi bi-check2 text-success" style="margin-right: 10px;"></i> Custom Integration</li>
+                </ul>
+                <a href="#" class="btn btn-outline" style="width: 100%; text-align: center;">Contact Sales</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Final CTA -->
+<section style="background: var(--dark); overflow: hidden; position: relative;">
+    <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(circle at 70% 30%, var(--primary) 0%, transparent 50%); opacity: 0.2;"></div>
+    <div class="container text-center" style="position: relative; z-index: 2;" data-animate>
+        <h2 style="color: var(--white); font-size: 3rem; margin-bottom: 24px;">Ready to transform your <span class="gradient-text">restaurant?</span></h2>
+        <p style="color: rgba(255,255,255,0.7); font-size: 1.25rem; max-width: 600px; margin: 0 auto 40px;">Join the restaurant revolution today. Start your 14-day free trial, no credit card required.</p>
+        <div class="flex-center" style="gap: 20px;">
+            <a asp-controller="Account" asp-action="Register" class="btn btn-primary btn-lg" style="padding: 18px 40px; font-size: 18px;">Get Started For Free</a>
+            <a href="#" class="btn btn-outline btn-lg" style="padding: 18px 40px; font-size: 18px; color: white; border-color: white;">Book a Demo</a>
+        </div>
+    </div>
+</section>
