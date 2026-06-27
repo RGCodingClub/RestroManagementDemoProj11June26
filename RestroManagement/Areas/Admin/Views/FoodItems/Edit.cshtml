@@ -172,9 +172,9 @@
                                             <td>₹@p.Cost</td>
                                             <td>@p.BaseQuantity</td>
                                             <td class="text-end">
-                                                <button type="submit" asp-action="DeletePortion" asp-route-id="@p.Id" class="btn btn-sm text-danger" onclick="return confirm('Delete this portion?')">
+                                                <a href="/Admin/FoodItems/DeletePortion/@p.Id" class="btn btn-sm text-danger" onclick="return confirm('Delete this portion?')">
                                                     <i class="bi bi-trash"></i>
-                                                </button>
+                                                </a>
                                             </td>
                                         </tr>
                                     }

@@ -399,7 +399,7 @@
                 var itemCategories = string.Join(",", items.Categories?.Select(c => c.Category?.Name).Where(n => n != null) ?? Enumerable.Empty<string>());
                 var defaultPortion = items.Portions?.FirstOrDefault();
                 
-                <div class="col-lg-4 col-md-6 col-sm-12 mb-4 food-card-container" 
+                <div class="col-lg-3 col-md-6 col-sm-12 mb-4 food-card-container" 
                      data-categories="@itemCategories" 
                      data-name="@items.Name.ToLower()" 
                      data-desc="@items.Description.ToLower()">
