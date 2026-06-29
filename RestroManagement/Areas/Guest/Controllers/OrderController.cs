@@ -1,18 +1,15 @@
+using Microsoft.AspNetCore.Authorization; 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RestroManagement.Data;
 using RestroManagement.DbModels;
-using Microsoft.AspNetCore.Http;
-using System.Text.Json;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using RestroManagement.ViewModels;
-using System;
+using RestroManagement.ViewModels; 
+using System.Text.Json; 
 
 namespace RestroManagement.Areas.Guest.Controllers
 {
     [Area("Guest")]
+    //[Authorize(Roles = "Guest")]
     public class OrderController : Controller
     {
         private readonly AppDBContext _context;

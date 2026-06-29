@@ -8,10 +8,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using RestroManagement.ViewModels;
 using System;
+using Microsoft.AspNetCore.Authorization;
 
 namespace RestroManagement.Areas.Guest.Controllers
 {
     [Area("Guest")]
+    //[Authorize(Roles = "Guest")]
     public class HomeController : Controller
     {
         private readonly AppDBContext dBContext;

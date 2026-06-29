@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RestroManagement.Data;
@@ -6,6 +7,8 @@ using RestroManagement.DbModels;
 namespace RestroManagement.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    //[Authorize(Roles = "Admin")]
+
     public class FoodItemsController : Controller
     {
         private readonly AppDBContext _context;
