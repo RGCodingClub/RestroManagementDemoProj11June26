@@ -1,0 +1,67 @@
+@model RestroManagement.DbModels.MenuCategory
+
+@{
+    ViewData["Title"] = (Model?.Id > 0 ? "Edit" : "Create") + " Category";
+}
+
+<div class="mb-4">
+    <a asp-action="Index" class="btn btn-link p-0 text-decoration-none text-muted mb-2">
+        <i class="bi bi-arrow-left"></i> Back to List
+    </a>
+    <h2 class="fw-bold">@ViewData["Title"]</h2>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card p-4">
+            <form asp-action="@(Model?.Id > 0 ? "Edit" : "Create")" enctype="multipart/form-data">
+                @if (Model?.Id > 0) { <input type="hidden" asp-for="Id" /> }
+                
+                <div class="mb-3">
+                    <label asp-for="Name" class="form-label fw-semibold"></label>
+                    <input asp-for="Name" class="form-control" placeholder="e.g. Starters" />
+                    <span asp-validation-for="Name" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Category Image</label>
+                    <input type="file" name="imageFile" class="form-control" accept="image/*" onchange="previewImage(this)" />
+                    <div class="mt-3">
+                        <img id="imagePreview" src="@(string.IsNullOrEmpty(Model?.ImageUrl) ? "#" : Model.ImageUrl)" 
+                             class="rounded @(string.IsNullOrEmpty(Model?.ImageUrl) ? "d-none" : "")" 
+                             style="max-width: 150px; height: auto;" />
+                    </div>
+                    @if (Model?.Id > 0 && !string.IsNullOrEmpty(Model.ImageUrl))
+                    {
+                        <input type="hidden" asp-for="ImageUrl" />
+                    }
+                </div>
+
+                <div class="mb-4">
+                    <label asp-for="DisplayOrder" class="form-label fw-semibold"></label>
+                    <input asp-for="DisplayOrder" class="form-control" type="number" />
+                    <span asp-validation-for="DisplayOrder" class="text-danger small"></span>
+                </div>
+
+                <button type="submit" class="btn btn-primary px-4">
+                    <i class="bi bi-check-lg"></i> Save Category
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        function previewImage(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#imagePreview').attr('src', e.target.result).removeClass('d-none');
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
+}

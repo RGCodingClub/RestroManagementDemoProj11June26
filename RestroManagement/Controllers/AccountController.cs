@@ -180,7 +180,7 @@ namespace RestroManagement.Controllers
                 if (roles.Contains("Guest"))
                     return RedirectToAction("Index", "Home", new { area = "Guest" });
 
-                else if (roles.Contains (  "Restaurant "))
+                else if (roles.Contains ("Restaurant"))
                     return RedirectToAction("Index", "Home", new { area = "Restaurant" });
 
                 else if (roles.Contains("SuperAdmin"))

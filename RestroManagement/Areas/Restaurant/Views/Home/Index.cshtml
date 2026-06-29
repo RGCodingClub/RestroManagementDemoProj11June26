@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "Restaurant Dashboard";
+    ViewData["Title"] = "Home";
 }
 
 <div class="container py-5">
@@ -50,7 +50,7 @@
             <div class="card shadow-lg border-0 text-center p-4">
                 <h4>📋 Manage Orders</h4>
                 <p>View and update customer orders.</p>
-                <a asp-controller="Orders" asp-action="Index" class="btn btn-primary">
+                <a href="/Restaurant/Orders" class="btn btn-primary">
                     View Orders
                 </a>
             </div>
@@ -60,7 +60,7 @@
             <div class="card shadow-lg border-0 text-center p-4">
                 <h4>🍔 Manage Menu</h4>
                 <p>Add, edit or remove food items.</p>
-                <a asp-controller="Menu" asp-action="Index" class="btn btn-success">
+                <a href="/Restaurant/FoodItems" class="btn btn-success">
                     Manage Menu
                 </a>
             </div>
