@@ -46,9 +46,15 @@ namespace RestroManagement.Areas.Restaurant.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(int id)
         {
-            var order = await _context.Orders.FindAsync(id);
+            var order = await _context.Orders
+                .Include(o => o.Items)
+                .FirstOrDefaultAsync(o => o.Id == id);
+
             if (order != null)
             {
+                // Delete all related OrderItems first
+                _context.OrderItems.RemoveRange(order.Items);
+                // Then delete the Order
                 _context.Orders.Remove(order);
                 await _context.SaveChangesAsync();
             }
