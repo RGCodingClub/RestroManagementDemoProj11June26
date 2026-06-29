@@ -182,13 +182,14 @@
         </div>
 
         <div class="col-lg-4">
+
             <!-- Categories Card -->
-            <div class="card p-4 mb-4">
+            <div class="card p-5 mb-4">
                 <h5 class="fw-bold mb-4"><i class="bi bi-tags me-2"></i>Menu Categories</h5>
                 <div style="max-height: 400px; overflow-y: auto;" class="custom-scrollbar">
                     @foreach (var cat in allCategories)
                     {
-                        <div class="form-check mb-2">
+                        <div class="form-check mb-2" style="margin-left:30px;">
                             <input class="form-check-input" type="checkbox" name="selectedCategories" value="@cat.Id" id="cat_@cat.Id" @(selectedCategoryIds.Contains(cat.Id) ? "checked" : "")>
                             <label class="form-check-label" for="cat_@cat.Id">
                                 @cat.Name

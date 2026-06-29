@@ -47,7 +47,9 @@ namespace RestroManagement.Controllers
                 {
                     _logger.LogInformation("User {Email} registered successfully.", model.Email);
                     await _signInManager.PasswordSignInAsync(model.Email, model.Password, false, lockoutOnFailure: false);
-                    return await ReDirectIfLoggedIn();
+                    TempData["SuccessMessage"] = "Account created successfully! Please login.";
+                    // return await ReDirectIfLoggedIn();
+                    return RedirectToAction("Login", "Account");
                 }
                 foreach (var error in result.Errors)
                 {
@@ -125,6 +127,7 @@ namespace RestroManagement.Controllers
                     await _context.SaveChangesAsync();
 
                     await _signInManager.PasswordSignInAsync(user.UserName, model.Password, false, lockoutOnFailure: false);
+                    TempData["SuccessMessage"] = "Restaurant Account created successfully! Please login.";
 
                     return RedirectToAction("Login", "Account");
                 }

@@ -1,0 +1,137 @@
+﻿:root {
+    --primary-color: #ef4f5f;
+    --text-main: #1c1c1c;
+    --text-light: #696969;
+    --bg-color: #f8f8f8;
+}
+
+body {
+    background-color: var(--bg-color);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Okra', Helvetica, sans-serif;
+    margin: 0;
+    padding: 20px 0;
+}
+
+.signup-container {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    width: 100%;
+    max-width: 500px;
+    padding: 40px;
+    animation: slideUp 0.4s ease-out;
+}
+
+@@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.brand-logo {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+    .brand-logo h1 {
+        color: var(--primary-color);
+        font-weight: 800;
+        font-size: 2.8rem;
+        margin: 0;
+        letter-spacing: -1px;
+    }
+
+.signup-header {
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--text-main);
+    margin-bottom: 24px;
+    text-align: center;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--text-light);
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.form-control {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid #e8e8e8;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: border-color 0.2s;
+}
+
+    .form-control:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 2px rgba(239, 79, 95, 0.1);
+    }
+
+.btn-signup {
+    width: 100%;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 14px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-top: 10px;
+}
+
+    .btn-signup:hover {
+        background-color: #d83a4a;
+    }
+
+.footer-links {
+    text-align: center;
+    margin-top: 25px;
+    font-size: 14px;
+    color: var(--text-light);
+}
+
+    .footer-links a {
+        color: var(--primary-color);
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+
+.error-summary {
+    background-color: #fff5f6;
+    border: 1px solid #ffcfd4;
+    color: #d83a4a;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+.form-label.required::after {
+    content: " *";
+    color: red;
+    font-weight: bold;
+}
