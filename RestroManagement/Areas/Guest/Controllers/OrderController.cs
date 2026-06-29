@@ -9,7 +9,7 @@ using System.Text.Json;
 namespace RestroManagement.Areas.Guest.Controllers
 {
     [Area("Guest")]
-    [Authorize(Roles = "Guest")]
+    //[Authorize(Roles = "Guest")]
     public class OrderController : Controller
     {
         private readonly AppDBContext _context;

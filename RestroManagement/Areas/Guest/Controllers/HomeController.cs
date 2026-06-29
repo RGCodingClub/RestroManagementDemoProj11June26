@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace RestroManagement.Areas.Guest.Controllers
 {
     [Area("Guest")]
-    [Authorize(Roles = "Guest")]
+    //[Authorize(Roles = "Guest")]
     public class HomeController : Controller
     {
         private readonly AppDBContext dBContext;
