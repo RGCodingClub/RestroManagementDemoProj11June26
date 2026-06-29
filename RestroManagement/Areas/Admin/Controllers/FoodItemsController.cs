@@ -253,7 +253,7 @@ namespace RestroManagement.Areas.Admin.Controllers
         }
 
         
-        public async Task<IActionResult> DeletePortion(int id)
+         public async Task<IActionResult> DeletePortion(int id)
         {
             var portion = await _context.FoodItemPortions.FindAsync(id);
             if (portion != null)
