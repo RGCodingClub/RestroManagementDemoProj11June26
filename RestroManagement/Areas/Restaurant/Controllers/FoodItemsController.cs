@@ -1,13 +1,13 @@
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RestroManagement.Data;
 using RestroManagement.DbModels;
 
-namespace RestroManagement.Areas.Admin.Controllers
+namespace RestroManagement.Areas.Restaurant.Controllers
 {
-    [Area("Admin")]
-    [Authorize(Roles = "Admin")]
+    [Area("Restaurant")]
+    [Authorize(Roles = "Restaurant")]
 
     public class FoodItemsController : Controller
     {
@@ -55,10 +55,10 @@ namespace RestroManagement.Areas.Admin.Controllers
                 {
                     foreach (var url in externalUrls.Where(u => !string.IsNullOrEmpty(u)))
                     {
-                        item.Images.Add(new FoodItemImage 
-                        { 
-                            ImageUrl = url, 
-                            IsPrimary = (currentIndex == primaryImageIndex) 
+                        item.Images.Add(new FoodItemImage
+                        {
+                            ImageUrl = url,
+                            IsPrimary = (currentIndex == primaryImageIndex)
                         });
                         currentIndex++;
                     }
@@ -70,10 +70,10 @@ namespace RestroManagement.Areas.Admin.Controllers
                     foreach (var file in imageFiles)
                     {
                         var path = await SaveImage(file);
-                        item.Images.Add(new FoodItemImage 
-                        { 
-                            ImageUrl = path, 
-                            IsPrimary = (currentIndex == primaryImageIndex) 
+                        item.Images.Add(new FoodItemImage
+                        {
+                            ImageUrl = path,
+                            IsPrimary = (currentIndex == primaryImageIndex)
                         });
                         currentIndex++;
                     }
@@ -132,7 +132,7 @@ namespace RestroManagement.Areas.Admin.Controllers
                     .Include(f => f.Categories)
                     .Include(f => f.Images)
                     .FirstOrDefaultAsync(f => f.Id == id);
-                
+
                 if (existingItem == null) return NotFound();
 
                 existingItem.Name = item.Name;
@@ -145,7 +145,7 @@ namespace RestroManagement.Areas.Admin.Controllers
                 // Handle Image Updates - Simple approach: Add new ones
                 // To support "primary" change on existing, we'd need more complex logic.
                 // For now, let's just add new ones as requested.
-                
+
                 if (externalUrls != null || imageFiles != null)
                 {
                     // If a new primary is set from the new batch, reset existing primaries
@@ -216,7 +216,7 @@ namespace RestroManagement.Areas.Admin.Controllers
                 int foodItemId = image.FoodItemId;
                 _context.FoodItemImages.Remove(image);
                 await _context.SaveChangesAsync();
-                
+
                 // Ensure at least one primary remains
                 var remainingImages = await _context.FoodItemImages.Where(i => i.FoodItemId == foodItemId).ToListAsync();
                 if (remainingImages.Any() && !remainingImages.Any(i => i.IsPrimary))
@@ -255,8 +255,8 @@ namespace RestroManagement.Areas.Admin.Controllers
             return RedirectToAction(nameof(Edit), new { id = portion.FoodItemId });
         }
 
-        
-         public async Task<IActionResult> DeletePortion(int id)
+
+        public async Task<IActionResult> DeletePortion(int id)
         {
             var portion = await _context.FoodItemPortions.FindAsync(id);
             if (portion != null)

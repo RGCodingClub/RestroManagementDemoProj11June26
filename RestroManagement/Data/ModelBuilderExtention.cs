@@ -12,7 +12,7 @@ namespace RestroManagement.Data
         {
             modelBuilder.Entity<IdentityRole<int>>().HasData(
                new IdentityRole<int>() { Id = 1, Name = "SuperAdmin", NormalizedName = "SUPERADMIN", ConcurrencyStamp = "afa7a44a-e339-453a-8890-c48355bae2ae" },
-               new IdentityRole<int>() { Id = 2, Name = "Restaurant ", NormalizedName = "RESTAURANT", ConcurrencyStamp = "b2c3d4e5-f6g7-8901-hijk-lmno12345678" },
+               new IdentityRole<int>() { Id = 2, Name = "Restaurant", NormalizedName = "RESTAURANT", ConcurrencyStamp = "b2c3d4e5-f6g7-8901-hijk-lmno12345678" },
                new IdentityRole<int>() { Id = 3, Name = "Waiter", NormalizedName = "WAITER", ConcurrencyStamp = "d1c9e5b8-7a0c-4f1e-9b2e-8c6a5f2b3c4d" },
                new IdentityRole<int>() { Id = 4, Name = "Guest", NormalizedName = "GUEST", ConcurrencyStamp = "a1b2c3d4-e5f6-7890-abcd-ef1234567890" }
             );

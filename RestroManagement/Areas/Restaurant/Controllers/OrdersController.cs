@@ -1,12 +1,12 @@
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using RestroManagement.Data; 
+using RestroManagement.Data;
 
-namespace RestroManagement.Areas.Admin.Controllers
+namespace RestroManagement.Areas.Restaurant.Controllers
 {
-    [Area("Admin")]
-    [Authorize(Roles = "Admin")]
+    [Area("Restaurant")]
+    [Authorize(Roles = "Restaurant")]
 
     public class OrdersController : Controller
     {

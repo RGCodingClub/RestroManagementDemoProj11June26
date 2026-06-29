@@ -17,22 +17,22 @@
         </div>
         <ul class="nav flex-column">
             <li class="nav-item">
-                <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Dashboard" ? "active" : "")" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">
+                <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Home" ? "active" : "")" asp-area="Restaurant" asp-controller="Home" asp-action="Index">
                     <i class="bi bi-speedometer2"></i> Dashboard
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "FoodItems" ? "active" : "")" asp-area="Admin" asp-controller="FoodItems" asp-action="Index">
+                <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "FoodItems" ? "active" : "")" asp-area="Restaurant" asp-controller="FoodItems" asp-action="Index">
                     <i class="bi bi-egg-fried"></i> Food Items
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Categories" ? "active" : "")" asp-area="Admin" asp-controller="Categories" asp-action="Index">
+                <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Categories" ? "active" : "")" asp-area="Restaurant" asp-controller="Categories" asp-action="Index">
                     <i class="bi bi-tags"></i> Categories
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Orders" ? "active" : "")" asp-area="Admin" asp-controller="Orders" asp-action="Index">
+                <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Orders" ? "active" : "")" asp-area="Restaurant" asp-controller="Orders" asp-action="Index">
                     <i class="bi bi-receipt"></i> Orders
                 </a>
             </li>
