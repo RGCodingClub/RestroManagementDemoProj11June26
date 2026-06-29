@@ -20,7 +20,10 @@ namespace RestroManagement.Areas.Guest.Controllers
         {
             dBContext = _dBContext;
         }
-
+        public IActionResult Index()
+        {
+            return View();
+        }
         public async Task<IActionResult> Menu()
         {
             var items = await dBContext.Fooditems
