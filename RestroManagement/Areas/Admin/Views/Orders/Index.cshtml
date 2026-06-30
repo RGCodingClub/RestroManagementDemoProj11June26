@@ -1,48 +1,68 @@
 @model IEnumerable<RestroManagement.DbModels.Order>
 
 @{
-    ViewData["Title"] = "Orders";
+	ViewData["Title"] = "Orders";
 }
 
 <h2 class="fw-bold mb-4">Orders Management</h2>
 
 <div class="card p-4">
-    <div class="table-responsive">
-        <table class="table table-hover align-middle">
-            <thead class="table-light">
-                <tr>
-                    <th>ID</th>
-                    <th>Customer</th>
-                    <th>Mobile</th>
-                    <th>Date</th>
-                    <th>Total</th>
-                    <th class="text-end">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model) {
-                <tr>
-                    <td>#@item.Id</td>
-                    <td class="fw-bold">@item.CustomerName</td>
-                    <td>@item.MobileNumber</td>
-                    <td>@item.OrderDate.ToString("g")</td>
-                    <td>₹@item.OrderTotal</td>
-                    <td class="text-end">
-                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-info me-2">
-                            <i class="bi bi-eye"></i> View
-                        </a>
-                        <form asp-action="Delete" asp-route-id="@item.Id" method="post" class="d-inline">
-                            <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete this order?')">
-                                <i class="bi bi-trash"></i>
-                            </button>
-                        </form>
-                    </td>
-                </tr>
-                }
-                @if (!Model.Any()) {
-                    <tr><td colspan="6" class="text-center py-5 text-muted">No orders found.</td></tr>
-                }
-            </tbody>
-        </table>
-    </div>
+	<div class="table-responsive">
+		<table class="table table-hover align-middle">
+			<thead class="table-light">
+				<tr>
+					<th>ID</th>
+					<th>Customer</th>
+					<th>Mobile</th>
+					<th>OrderItem</th>
+					<th>Date</th>
+					<th>Total</th>
+					<th class="text-end">Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var item in Model)
+				{
+					<tr>
+						<td class="fw-bold">#@item.Id</td>
+						<td class="fw-bold">@item.CustomerName</td>
+						<td>@item.MobileNumber</td>
+						@if (item.Items == null || item.Items.Count == 0)
+						{
+							<td> No Items added </td>
+						}
+						else if (item.Items.Count == 1)
+						{
+							<td>
+								@item.Items.FirstOrDefault().FoodItem.Name  
+							</td>
+						}
+						else
+						{
+							<td>
+								@item.Items.FirstOrDefault().FoodItem.Name + @(item.Items.Count() - 1)
+							</td>
+						}
+
+						<td>@item.OrderDate.ToString("g")</td>
+						<td>₹@item.OrderTotal</td>
+						<td class="text-end">
+							<a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-info me-2">
+								<i class="bi bi-eye"></i> View
+							</a>
+							<form asp-action="Delete" asp-route-id="@item.Id" method="post" class="d-inline">
+								<button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete this order?')">
+									<i class="bi bi-trash"></i>
+								</button>
+							</form>
+						</td>
+					</tr>
+				}
+				@if (!Model.Any())
+				{
+					<tr><td colspan="6" class="text-center py-5 text-muted">No orders found.</td></tr>
+				}
+			</tbody>
+		</table>
+	</div>
 </div>

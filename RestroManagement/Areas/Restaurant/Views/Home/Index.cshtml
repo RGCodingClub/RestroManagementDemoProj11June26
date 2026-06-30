@@ -1,4 +1,5 @@
-﻿@{
+﻿@model IEnumerable<RestroManagement.DbModels.Order>
+@{
     ViewData["Title"] = "Home";
 }
 
@@ -15,21 +16,21 @@
 
         <div class="col-md-3">
             <div class="card shadow border-0 text-center p-4">
-                <h3 class="text-primary">120</h3>
+                <h3 class="fw-bold mb-0">@ViewBag.OrderCount</h3>
                 <p>Total Orders</p>
             </div>
         </div>
 
         <div class="col-md-3">
             <div class="card shadow border-0 text-center p-4">
-                <h3 class="text-success">₹25,000</h3>
+                <h3 class="fw-bold mb-0">₹@ViewBag.TotalRevenue</h3>
                 <p>Revenue</p>
             </div>
         </div>
 
         <div class="col-md-3">
             <div class="card shadow border-0 text-center p-4">
-                <h3 class="text-warning">35</h3>
+                <h3 class="fw-bold mb-0">@ViewBag.FoodItemCount</h3>
                 <p>Menu Items</p>
             </div>
         </div>
@@ -94,29 +95,32 @@
             </thead>
 
             <tbody>
-                <tr>
-                    <td>#101</td>
-                    <td>Rahul</td>
-                    <td>Pizza</td>
+                    @foreach(var order in Model)
+                    {
+                    <tr>
+                    <td>#@order.Id</td>
+                    <td>@order.CustomerName</td>
+                        @if (order.Items == null || order.Items.Count == 0)
+                        {
+                            <td> No Items added </td>
+                        }
+                        else if (order.Items.Count == 1)
+                        {
+                            <td>
+                                @order.Items.FirstOrDefault().FoodItem.Name
+                            </td>
+                        }
+                        else
+                        {
+                            <td>
+                                @order.Items.FirstOrDefault().FoodItem.Name + @(order.Items.Count() - 1)
+                            </td>
+                        }
+
                     <td><span class="badge bg-warning">Pending</span></td>
-                    <td>₹450</td>
-                </tr>
-
-                <tr>
-                    <td>#102</td>
-                    <td>Priya</td>
-                    <td>Burger</td>
-                    <td><span class="badge bg-success">Completed</span></td>
-                    <td>₹250</td>
-                </tr>
-
-                <tr>
-                    <td>#103</td>
-                    <td>Aman</td>
-                    <td>Pasta</td>
-                    <td><span class="badge bg-danger">Cancelled</span></td>
-                    <td>₹300</td>
-                </tr>
+                    <td>@order.OrderTotal</td>
+                </tr> 
+               }   
             </tbody>
         </table>
     </div>

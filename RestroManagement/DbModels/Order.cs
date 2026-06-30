@@ -9,7 +9,7 @@ namespace RestroManagement.DbModels
         public int Id { get; set; }
         public string CustomerName { get; set; } = string.Empty;
         public string MobileNumber { get; set; } = string.Empty;
-        public List<OrderItem>? Items { get; set; } = null;
+        public List<OrderItem> Items { get; set; } = new List<OrderItem>();
         public DateTime OrderDate { get; set; }
         [NotMapped]
         public float TotalPrice
@@ -27,7 +27,7 @@ namespace RestroManagement.DbModels
         }
 
         [NotMapped]
-        public float OrderTotal { get { return (TotalPrice + (TotalPrice * SGST) + (TotalPrice * CGST) + PackagingCharges); } }
+        public float OrderTotal { get { return (TotalPrice + SGST + CGST + PackagingCharges); } }
         //-----------------------------------------------------------------------------------------
 
         [NotMapped]

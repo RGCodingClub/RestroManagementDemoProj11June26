@@ -63,6 +63,7 @@
                         <tr>
                             <th>Order ID</th>
                             <th>Customer</th>
+                            <th>Order Items</th>
                             <th>Date</th>
                             <th>Amount</th>
                         </tr>
@@ -72,6 +73,24 @@
                         <tr>
                             <td>#@order.Id</td>
                             <td>@order.CustomerName</td>
+                                
+                                @if (order.Items == null || order.Items.Count == 0)
+                                {
+                                    <td> No Items added </td>
+                                }
+                                else if (order.Items.Count == 1)
+                                {
+                                    <td>
+                                        @order.Items.FirstOrDefault().FoodItem.Name
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td>
+                                        @order.Items.FirstOrDefault().FoodItem.Name + @(order.Items.Count() - 1)
+                                    </td>
+                                }
+
                             <td>@order.OrderDate.ToString("g")</td>
                             <td class="fw-bold">₹@order.OrderTotal</td>
                         </tr>

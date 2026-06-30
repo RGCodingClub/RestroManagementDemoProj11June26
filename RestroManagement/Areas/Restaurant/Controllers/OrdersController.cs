@@ -6,7 +6,7 @@ using RestroManagement.Data;
 namespace RestroManagement.Areas.Restaurant.Controllers
 {
     [Area("Restaurant")]
-    [Authorize(Roles = "Restaurant")]
+    //[Authorize(Roles = "Restaurant")]
 
     public class OrdersController : Controller
     {
@@ -46,15 +46,11 @@ namespace RestroManagement.Areas.Restaurant.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(int id)
         {
-            var order = await _context.Orders
-                .Include(o => o.Items)
-                .FirstOrDefaultAsync(o => o.Id == id);
-
+            var orderItems = await _context.OrderItems.Where(oi => oi.OrderId == id).ToListAsync();
+            var order = await _context.Orders.FindAsync(id);
             if (order != null)
             {
-                // Delete all related OrderItems first
-                _context.OrderItems.RemoveRange(order.Items);
-                // Then delete the Order
+                _context.OrderItems.RemoveRange(orderItems);
                 _context.Orders.Remove(order);
                 await _context.SaveChangesAsync();
             }

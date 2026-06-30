@@ -6,7 +6,7 @@ using RestroManagement.Data;
 namespace RestroManagement.Areas.Restaurant.Controllers
 {
     [Area("Restaurant")]
-    [Authorize(Roles = "Restaurant")]
+    //[Authorize(Roles = "Restaurant")]
 
     public class HomeController : Controller
     {
@@ -26,6 +26,7 @@ namespace RestroManagement.Areas.Restaurant.Controllers
 
             var recentOrders = await _context.Orders
                 .Include(o => o.Items)
+                  .ThenInclude(oi => oi.FoodItem)
                 .OrderByDescending(o => o.OrderDate)
                 .Take(5)
                 .ToListAsync();

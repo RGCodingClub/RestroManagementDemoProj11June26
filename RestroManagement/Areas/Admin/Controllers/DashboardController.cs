@@ -26,6 +26,7 @@ namespace RestroManagement.Areas.Admin.Controllers
 
             var recentOrders = await _context.Orders
                 .Include(o => o.Items)
+                   .ThenInclude(oi => oi.FoodItem)
                 .OrderByDescending(o => o.OrderDate)
                 .Take(5)
                 .ToListAsync();

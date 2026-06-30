@@ -7,6 +7,9 @@ namespace RestroManagement.DbModels
         {
             [Key]
             public int Id { get; set; }
+            public int OrderId { get; set; } 
+            [ForeignKey("OrderId")]
+            public Order? Order { get; set; } 
 
             public int FoodItemId { get; set; }
             [ForeignKey("FoodItemId")]

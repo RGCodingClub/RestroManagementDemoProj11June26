@@ -7,7 +7,7 @@ using RestroManagement.DbModels;
 namespace RestroManagement.Areas.Restaurant.Controllers
 {
     [Area("Restaurant")]
-    [Authorize(Roles = "Restaurant")]
+    //[Authorize(Roles = "Restaurant")]
     public class CategoriesController : Controller
     {
         private readonly AppDBContext _context;

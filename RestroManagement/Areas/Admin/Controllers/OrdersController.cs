@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using RestroManagement.Data; 
+using RestroManagement.Data;
 
 namespace RestroManagement.Areas.Admin.Controllers
 {
@@ -46,9 +46,11 @@ namespace RestroManagement.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(int id)
         {
+            var orderItems = await _context.OrderItems.Where(oi => oi.OrderId == id).ToListAsync();
             var order = await _context.Orders.FindAsync(id);
             if (order != null)
             {
+                _context.OrderItems.RemoveRange(orderItems);
                 _context.Orders.Remove(order);
                 await _context.SaveChangesAsync();
             }
