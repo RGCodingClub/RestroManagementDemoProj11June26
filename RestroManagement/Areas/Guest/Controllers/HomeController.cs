@@ -1,14 +1,17 @@
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RestroManagement.Data;
-using Microsoft.AspNetCore.Http;
-using System.Text.Json;
+using RestroManagement.ViewModels;
+using Microsoft.AspNetCore.Identity;
+using RestroManagement.DbModels.User;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
-using RestroManagement.ViewModels;
-using System;
-using Microsoft.AspNetCore.Authorization;
 
 namespace RestroManagement.Areas.Guest.Controllers
 {
@@ -17,15 +20,44 @@ namespace RestroManagement.Areas.Guest.Controllers
     public class HomeController : Controller
     {
         private readonly AppDBContext dBContext;
+        private readonly UserManager<AppUser> _userManager;
 
-        public HomeController(AppDBContext _dBContext)
+        public HomeController(
+            AppDBContext _dBContext,
+            UserManager<AppUser> userManager)
         {
             dBContext = _dBContext;
+            _userManager = userManager;
         }
+
         public IActionResult Index()
         {
             return View();
         }
+
+        public async Task<IActionResult> Profile()
+        {
+            var currentUser = await _userManager.GetUserAsync(User);
+
+            if (currentUser == null)
+            {
+                return RedirectToAction("Login");
+            }
+
+            var model = new profile
+            {
+
+                FName = currentUser.FName,
+                LName = currentUser.LName,
+                Email = currentUser.Email,
+                PhoneNumber = currentUser.PhoneNumber
+            };
+
+            return View(model);
+        }
+    
+
+
         public async Task<IActionResult> Menu()
         {
             var items = await dBContext.Fooditems
