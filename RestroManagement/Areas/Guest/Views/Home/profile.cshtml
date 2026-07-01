@@ -1,0 +1,121 @@
+﻿@using RestroManagement.ViewModels
+@model RestroManagement.ViewModels.profile
+
+<div class="container mt-5">
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-8">
+
+            <div class="card shadow-lg border-0 rounded-4">
+
+                <div class="card-header bg-danger text-white text-center py-4">
+                    <h3>Guest Profile</h3>
+                </div>
+
+                <form asp-action="Profile" method="post">
+
+                    <div class="card-body">
+
+                        <div class="row">
+
+                            <!-- Profile Image -->
+                            <div class="col-md-4 text-center">
+
+                                <img src="https://i.pravatar.cc/200?img=12"
+                                     class="img-fluid rounded-circle border border-4 border-primary"
+                                     width="180" />
+                                <p class="fw-bold mt-3">
+                                    @Model.FName @Model.LName
+                                </p>
+
+                                <span class="badge bg-success">
+                                    Guest
+                                </span>
+
+                            </div>
+
+                            <!-- Profile Details -->
+                            <div class="col-md-8">
+
+                                <table class="table table-borderless">
+
+                                    <tr>
+                                        <th>Guest ID</th>
+                                        <td>GST001</td>
+                                    </tr>
+
+                                    <tr>
+                                        <th>Email</th>
+                                        <td>@Model.Email</td>
+                                    </tr>
+
+                                    <tr>
+                                        <th>Phone</th>
+                                        <td>@Model.PhoneNumber</td>
+                                    </tr>
+
+                                    <tr>
+                                        <th>Gender</th>
+                                        <td>
+                                            <select asp-for="Gender" class="form-select">
+                                                <option value="">Select Gender</option>
+                                                <option value="Male">Male</option>
+                                                <option value="Female">Female</option>
+                                                <option value="Other">Other</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <th>Date of Birth</th>
+                                        <td>
+                                            <input asp-for="DateOfBirth"
+                                                   type="date"
+                                                   class="form-control" />
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <th>Address</th>
+                                        <td>
+                                            <textarea asp-for="Address"
+                                                      class="form-control"
+                                                      rows="3"></textarea>
+                                        </td>
+                                    </tr>
+
+
+                                </table>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="card-footer text-center">
+
+                        <button type="submit" class="btn btn-primary">
+                            Save Changes
+                        </button>
+
+                        <a asp-action="MyReservations" class="btn btn-success">
+                            My Reservations
+                        </a>
+
+                        <a asp-action="Logout" class="btn btn-danger">
+                            Logout
+                        </a>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
