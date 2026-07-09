@@ -1,0 +1,123 @@
+﻿@model IEnumerable<RestroManagement.DbModels.Order>
+@{
+    Layout = "_RestaurantLayout";
+}
+<head>
+<style>
+    .calendar-header {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 20px;
+        margin: 20px 0;
+        margin-left: 800px;
+    }
+
+    .arrow {
+        font-size: 24px;
+        text-decoration: none;
+        color: #333;
+        border: 1px solid #ccc;
+        padding: 8px 15px;
+        border-radius: 5px;
+    }
+
+        .arrow:hover {
+            background: #f0f0f0;
+        }
+
+    .date {
+        font-size: 22px;
+        font-weight: bold;
+    }
+</style>
+</head>
+<!-- Dashboard Heading -->
+<div class="text-center mb-3">
+    <h1 class="fw-bold text-danger">🍴Recents Orders🍴</h1>
+    
+</div>
+
+<div class="calendar-header">
+
+    <a href="javascript:void(0)" class="arrow" onclick="" id="prevDate">&#10094;</a>
+    <div id="selectedDate" class="date">
+        @DateTime.Today.ToString("dd-MM-yyyy")
+    </div>
+    <a href="javascript:void(0)" class="arrow" id="nextDate">&#10095;</a>
+
+</div>
+    <div class="card p-2">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>ID</th>
+                        <th>Customer</th>
+                        <th>Mobile</th>
+                        <th>Order Items</th>
+                        <th>Date</th>
+                        <th>Total</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="fw-bold">#@item.Id</td>
+                            <td class="fw-bold">@item.CustomerName</td>
+                            <td>@item.MobileNumber</td>
+
+                            @if (item.Items == null || item.Items.Count == 0)
+                            {
+                                <td>No Items added</td>
+                            }
+                            else if (item.Items.Count == 1)
+                            {
+                                <td>@item.Items.First().FoodItem.Name</td>
+                            }
+                            else
+                            {
+                                <td>
+                                    @item.Items.First().FoodItem.Name (+@(item.Items.Count - 1))
+                                </td>
+                            }
+
+                            <td>@item.OrderDate.ToString("g")</td>
+                            <td>₹@item.OrderTotal</td>
+
+                            <td class="text-end">
+                                
+                                <a asp-area="Restaurant"
+                                       asp-controller="Orders"
+                                       asp-action="dashboarddetails"
+                                          asp-route-id="@item.Id"
+                                        class="btn btn-sm btn-outline-info me-2">
+                                           View
+                                </a>
+                            
+                            </td>
+                        </tr>
+                    }
+
+                    @if (!Model.Any())
+                    {
+                        <tr>
+                            <td colspan="7" class="text-center">
+                                No orders found.
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="~/js/orders.js"></script>
+
+
+

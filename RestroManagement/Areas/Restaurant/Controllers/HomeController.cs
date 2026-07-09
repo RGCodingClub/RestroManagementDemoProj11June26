@@ -16,7 +16,41 @@ namespace RestroManagement.Areas.Restaurant.Controllers
         {
             _context = context;
         }
+        public async Task<IActionResult> RecentOrders(DateTime date)
+        {
+            var orders = await _context.Orders
+                .Include(o => o.Items)
+                .ThenInclude(i => i.FoodItem)
+                .Where(o => o.OrderDate.Date == date.Date)
+                .OrderByDescending(o => o.OrderDate)
+                .ToListAsync();
+            return PartialView("~/Areas/Restaurant/Views/Home/RecentOrders.cshtml", orders);
+        }
+        public async Task<IActionResult> GetRecentOrders(DateTime date)
+        {
+            var orders = await _context.Orders
+                .Include(o => o.Items)
+                .ThenInclude(i => i.FoodItem)
+                .Where(o => o.OrderDate.Date == date.Date)
+                .OrderByDescending(o => o.OrderDate)
+                .ToListAsync();
+            return PartialView("~/Areas/Restaurant/Views/Home/RecentOrders.cshtml", orders);
+        }
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null) return NotFound();
 
+            var order = await _context.Orders
+                .Include(o => o.Items)
+                    .ThenInclude(oi => oi.FoodItem)
+                .Include(o => o.Items)
+                    .ThenInclude(oi => oi.Portion)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (order == null) return NotFound();
+
+            return View(order);
+        }
         public async Task<IActionResult> Index()
         {
             ViewBag.FoodItemCount = await _context.Fooditems.CountAsync();

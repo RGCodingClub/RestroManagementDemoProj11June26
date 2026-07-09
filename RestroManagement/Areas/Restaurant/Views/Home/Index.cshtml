@@ -3,48 +3,21 @@
     ViewData["Title"] = "Home";
 }
 
-<div class="container py-5">
 
+<div class="container py-3">
+   
     <!-- Dashboard Heading -->
-    <div class="text-center mb-5">
+    <div class="text-center mb-3">
         <h1 class="fw-bold text-danger">🍴 Restaurant Dashboard</h1>
         <p class="lead text-muted">Manage your restaurant operations easily</p>
     </div>
 
+
+
     <!-- Summary Cards -->
-    <div class="row g-4 mb-5">
-
-        <div class="col-md-3">
-            <div class="card shadow border-0 text-center p-4">
-                <h3 class="fw-bold mb-0">@ViewBag.OrderCount</h3>
-                <p>Total Orders</p>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="card shadow border-0 text-center p-4">
-                <h3 class="fw-bold mb-0">₹@ViewBag.TotalRevenue</h3>
-                <p>Revenue</p>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="card shadow border-0 text-center p-4">
-                <h3 class="fw-bold mb-0">@ViewBag.FoodItemCount</h3>
-                <p>Menu Items</p>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="card shadow border-0 text-center p-4">
-                <h3 class="text-danger">18</h3>
-                <p>Pending Orders</p>
-            </div>
-        </div>
-
-    </div>
-
+    
     <!-- Management Section -->
+    <div class="row g-4 mt-2">
     <div class="row g-4">
 
         <div class="col-md-4">
@@ -78,51 +51,40 @@
         </div>
 
     </div>
+    <div class="row g-4 mb-5">
 
-    <!-- Recent Orders Table -->
-    <div class="mt-5">
-        <h2 class="mb-4 text-danger">Recent Orders</h2>
+        <div class="col-md-3">
+            <div class="card shadow border-0 text-center p-4">
+                <h3 class="fw-bold mb-0">@ViewBag.OrderCount</h3>
+                <p>Total Orders</p>
+            </div>
+        </div>
 
-        <table class="table table-bordered table-hover shadow">
-            <thead class="table-dark">
-                <tr>
-                    <th>Order ID</th>
-                    <th>Customer</th>
-                    <th>Food Item</th>
-                    <th>Status</th>
-                    <th>Total</th>
-                </tr>
-            </thead>
+        <div class="col-md-3">
+            <div class="card shadow border-0 text-center p-4">
+                <h3 class="fw-bold mb-0">₹@ViewBag.TotalRevenue</h3>
+                <p>Revenue</p>
+            </div>
+        </div>
 
-            <tbody>
-                    @foreach(var order in Model)
-                    {
-                    <tr>
-                    <td>#@order.Id</td>
-                    <td>@order.CustomerName</td>
-                        @if (order.Items == null || order.Items.Count == 0)
-                        {
-                            <td> No Items added </td>
-                        }
-                        else if (order.Items.Count == 1)
-                        {
-                            <td>
-                                @order.Items.FirstOrDefault().FoodItem.Name
-                            </td>
-                        }
-                        else
-                        {
-                            <td>
-                                @order.Items.FirstOrDefault().FoodItem.Name + @(order.Items.Count() - 1)
-                            </td>
-                        }
+        <div class="col-md-3">
+            <div class="card shadow border-0 text-center p-4">
+                <h3 class="fw-bold mb-0">@ViewBag.FoodItemCount</h3>
+                <p>Menu Items</p>
+            </div>
+        </div>
 
-                    <td><span class="badge bg-warning">Pending</span></td>
-                    <td>@order.OrderTotal</td>
-                </tr> 
-               }   
-            </tbody>
-        </table>
+        <div class="col-md-3">
+            <div class="card shadow border-0 text-center p-4">
+                <h3 class="text-danger">18</h3>
+                <p>Pending Orders</p>
+            </div>
+        </div>
+
     </div>
 
+    <!-- Recent Orders Table -->
+   
 </div>
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+        <script src="~/js/orders.js"></script>
