@@ -4,6 +4,7 @@ using System.Diagnostics;
 
 namespace RestroManagement.Controllers
 {
+
     public class HomeController : Controller
     {
         public IActionResult Index()

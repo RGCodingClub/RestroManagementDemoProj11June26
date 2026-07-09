@@ -76,8 +76,6 @@ namespace RestroManagement.Areas.Guest.Controllers
 
             return View(model);
         }
-    
-
 
         public async Task<IActionResult> Menu()
         {
@@ -87,6 +85,14 @@ namespace RestroManagement.Areas.Guest.Controllers
                 .Include(f => f.Images)
                 .Include(f => f.Portions)
                 .ToListAsync();
+
+            var cartJson = HttpContext.Session.GetString("Cart");
+            var cart = string.IsNullOrEmpty(cartJson)
+                ? new List<CartItem>()
+                : JsonSerializer.Deserialize<List<CartItem>>(cartJson) ?? new List<CartItem>();
+
+            ViewBag.CartCount = cart.Sum(x => x.Quantity);
+
             return View(items);
         }
 

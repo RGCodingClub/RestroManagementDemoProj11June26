@@ -62,15 +62,24 @@
                         <span asp-validation-for="StoreName" class="text-danger small"></span>
                     </div>
                     <div class="col-md-5 form-group">
-                        <label asp-for="BusinessType" class="form-label required">Type</label>
-                        <select asp-for="BusinessType" class="form-select">
-                            <option value="">Select Type</option>
-                            <option value="Dine-in">Dine-in</option>
-                            <option value="Cafe">Cafe</option>
-                            <option value="Bakery">Bakery</option>
-                            <option value="Quick Service">Quick Service</option>
-                        </select>
-                        <span asp-validation-for="BusinessType" class="text-danger small"></span>
+                        <label class="form-label required">Business Type</label> 
+                        <div class="form-check"> 
+                            <input class="form-check-input" type="checkbox" name="BusinessType" value="Dine-in" id="dinein">
+                            <label class="form-check-label" for="dinein"> Dine-in </label>
+                        </div> 
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="BusinessType" value="Cafe" id="cafe">
+                            <label class="form-check-label" for="cafe"> Cafe </label>
+                        </div> 
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="BusinessType" value="Bakery" id="bakery">
+                            <label class="form-check-label" for="bakery"> Bakery </label>
+                        </div> 
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="BusinessType" value="Quick Service" id="quickservice">
+                            <label class="form-check-label" for="quickservice"> Quick Service </label>
+                        </div> 
+                        <span asp-validation-for="BusinessType" class="text-danger"></span>
                     </div>
                 </div>
 
@@ -155,7 +164,7 @@
                     <div class="col-md-6 form-group">
                         <label asp-for="Password" class="form-label required">Password</label>
                       <div class="input-group">
-                            <input asp-for="Password" type="password" class="form-control" id="Password" />
+                            <input asp-for="Password" type="password" class="form-control" id="Password"/>
                             <button class="btn btn-outline-secondary" type="button" onclick="togglePassword('Password', 'passwordIcon')">
                              <i class="bi bi-eye" id="passwordIcon"></i>
                             </button>
@@ -166,7 +175,8 @@
 
                     <div class="col-md-6 form-group">
                         <label asp-for="ConfirmPassword" class="form-label required">Confirm Password</label>
-                        <div class="input-group"><input asp-for="ConfirmPassword" type="password"  class="form-control"id="ConfirmPassword" />
+                        <div class="input-group">
+                            <input asp-for="ConfirmPassword" type="password" class="form-control" id="ConfirmPassword" />
                             <button class="btn btn-outline-secondary" type="button" onclick="togglePassword('ConfirmPassword', 'confirmPasswordIcon')">
                                 <i class="bi bi-eye" id="confirmPasswordIcon"></i>
                             </button>

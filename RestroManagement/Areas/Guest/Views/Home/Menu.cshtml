@@ -58,7 +58,7 @@
                 <!-- Bulk Checkout Button -->
                 <div class="col-md-4 text-md-end">
                     <button type="submit" class="btn btn-secondary btn-lg w-100 py-3 fw-bold" id="btnProceedToCart" disabled style="border-radius: 12px;">
-                        <i class="bi bi-cart-check-fill"></i> Proceed to Billing (<span id="selectedCountBadge">0</span>)
+                        <i class="bi bi-cart-check-fill"></i> Proceed to Billing (<span id="selectedCountBadge" data-cart="@ViewBag.CartCount">@ViewBag.CartCount</span>)
                     </button>
                 </div>
             </div>
@@ -217,7 +217,9 @@
         let topBtn = document.getElementById('btnProceedToCart');
         let floatingBtn = document.getElementById('floatingProceedBtn');
 
-        document.getElementById('selectedCountBadge').innerText = totalSelected;
+        let previousCount = parseInt(document.getElementById("selectedCountBadge").dataset.cart || "0");
+
+        document.getElementById("selectedCountBadge").innerText = previousCount + totalSelected;
         document.getElementById('floatingCountBadge').innerText = totalSelected;
 
         if (totalSelected > 0) {
@@ -278,5 +280,15 @@
         } else {
             emptyState.classList.add('d-none');
         }
+            window.onload = function () {
+
+        let cartCount = parseInt(document.getElementById("selectedCountBadge").innerText) || 0;
+
+        if (cartCount > 0) {
+            document.getElementById("btnProceedToCart").disabled = false;
+            document.getElementById("btnProceedToCart").classList.remove("btn-secondary");
+            document.getElementById("btnProceedToCart").classList.add("btn-danger");
+        }
+    };
     }
 </script>

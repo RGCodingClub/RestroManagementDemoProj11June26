@@ -51,9 +51,9 @@ namespace RestroManagement.Controllers
                 {
                     _logger.LogInformation("User {Email} registered successfully.", model.Email);
                     await _signInManager.PasswordSignInAsync(model.Email, model.Password, false, lockoutOnFailure: false);
-                    TempData["SuccessMessage"] = "Account created successfully! Please login.";
+                    //TempData["SuccessMessage"] = "Account created successfully! Please login.";
                     // return await ReDirectIfLoggedIn();
-                    return RedirectToAction("Login", "Account");
+                    return RedirectToAction("Menu", "Home", new { area = "Guest" });
                 }
                 foreach (var error in result.Errors)
                 {
@@ -91,6 +91,7 @@ namespace RestroManagement.Controllers
         {
             if (ModelState.IsValid)
             {
+                ViewBag.States = _context.States.ToList();
                 var user = new AppUser
                 {
                     UserName = model.Email,
@@ -156,7 +157,7 @@ namespace RestroManagement.Controllers
                         ModelState.AddModelError(string.Empty, error.Description);
                 }
             }
-
+            ViewBag.States = _context.States.ToList();
             return View(model);
 
         }
@@ -201,7 +202,7 @@ namespace RestroManagement.Controllers
                 } ///Guest/Home/index
                 var roles = await _userManager.GetRolesAsync(user);
                 if (roles.Contains("Guest"))
-                    return RedirectToAction("Index", "Home", new { area = "Guest" });
+                    return RedirectToAction("Menu", "Home", new { area = "Guest" });
 
                 else if (roles.Contains("Restaurant"))
                     return RedirectToAction("Index", "Home", new { area = "Restaurant" });

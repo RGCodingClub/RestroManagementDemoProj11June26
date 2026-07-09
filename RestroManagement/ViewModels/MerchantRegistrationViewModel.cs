@@ -75,6 +75,7 @@ namespace RestroManagement.ViewModels
 
         [Required(ErrorMessage = "Business Type is required")]
         [Display(Name = "Business Type")]
-        public string BusinessType { get; set; } = string.Empty;
+        public List<string> BusinessType { get; set; } = new List<string>();
+       
     }
 }
