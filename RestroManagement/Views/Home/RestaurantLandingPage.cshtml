@@ -33,8 +33,15 @@
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
     <!-- Custom styling inside to guarantee visual excellence and complete control -->
     <style>
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 110px;
+        }
         :root {
             --brand-dark: #11141A;
             --brand-primary: #FF4A32;
@@ -760,6 +767,8 @@
             display: flex;
             flex-direction: column;
             transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow-y: auto;
+            scrollbar-width: thin;
         }
 
         .cart-panel.active {
@@ -772,6 +781,11 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
+            position: sticky;
+            top: 0;
+            background: var(--white);
+            z-index: 10;
+            flex-shrink: 0;
         }
 
         .cart-close-btn {
@@ -787,8 +801,7 @@
         }
 
         .cart-items-list {
-            flex: 1;
-            overflow-y: auto;
+            flex: 1 0 auto;
             padding: 24px;
             display: flex;
             flex-direction: column;
@@ -882,6 +895,7 @@
             background: var(--bg-light);
             padding: 24px;
             border-top: 1px solid var(--border-light);
+            flex-shrink: 0;
         }
 
         .summary-row {
@@ -1125,7 +1139,7 @@
         }
     </style>
 </head>
-<body>
+<body x-data="restaurantApp">
 
     <!-- Header Navigation -->
     <header id="site-header">
@@ -1143,10 +1157,10 @@
             </ul>
             
             <div class="nav-actions">
-                <button class="cart-trigger" onclick="toggleCart(true)">
+                <button class="cart-trigger" x-on:click="cartOpen = true">
                     <i class="bi bi-cart3"></i>
                     <span>My Cart</span>
-                    <span class="cart-badge" id="cart-total-badge">0</span>
+                    <span class="cart-badge" x-text="totalQty"></span>
                 </button>
             </div>
         </div>
@@ -1244,18 +1258,18 @@
             <div class="menu-controls">
                 <div class="search-wrapper">
                     <i class="bi bi-search"></i>
-                    <input type="text" class="search-input" id="menu-search" placeholder="Search for Paneer Tikka, Rabdi, Dal..." oninput="filterMenu()">
+                    <input type="text" class="search-input" id="menu-search" placeholder="Search for Paneer Tikka, Rabdi, Dal..." x-model="searchQuery">
                 </div>
                 
                 <div class="diet-filters">
-                    <button class="diet-btn active" data-diet="all" onclick="setDietFilter('all')">
+                    <button class="diet-btn" :class="{ 'active': activeDiet === 'all' }" x-on:click="activeDiet = 'all'">
                         All Items
                     </button>
-                    <button class="diet-btn" data-diet="veg" onclick="setDietFilter('veg')">
+                    <button class="diet-btn" :class="{ 'active': activeDiet === 'veg' }" x-on:click="activeDiet = 'veg'">
                         <span class="badge-dot" style="background-color: var(--veg-color)"></span>
                         Vegetarian
                     </button>
-                    <button class="diet-btn" data-diet="nonveg" onclick="setDietFilter('nonveg')">
+                    <button class="diet-btn" :class="{ 'active': activeDiet === 'nonveg' }" x-on:click="activeDiet = 'nonveg'">
                         <span class="badge-dot" style="background-color: var(--nonveg-color)"></span>
                         Non-Vegetarian
                     </button>
@@ -1264,10 +1278,10 @@
 
             <!-- Category Pills/Tabs -->
             <div class="category-tabs">
-                <button class="category-tab active" data-category-id="all" onclick="setCategoryFilter('all')">All Categories</button>
+                <button class="category-tab" :class="{ 'active': activeCategory === 'all' }" x-on:click="activeCategory = 'all'">All Categories</button>
                 @foreach (var cat in categories)
                 {
-                    <button class="category-tab" data-category-id="@cat.Id" onclick="setCategoryFilter('@cat.Id')">@cat.Name</button>
+                    <button class="category-tab" :class="{ 'active': activeCategory === '@cat.Id' }" x-on:click="activeCategory = '@cat.Id'">@cat.Name</button>
                 }
             </div>
 
@@ -1283,6 +1297,7 @@
                     var categoryIds = string.Join(",", item.Categories?.Select(c => c.CategoryId) ?? new List<int>());
 
                     <div class="menu-card" 
+                         x-show="matchesFilter(@item.Id, '@categoryIds', '@(isVeg ? "veg" : "nonveg")', $el)"
                          data-item-id="@item.Id" 
                          data-item-name="@item.Name"
                          data-diet-pref="@(isVeg ? "veg" : "nonveg")"
@@ -1306,7 +1321,9 @@
                                 {
                                     <div class="portion-select-wrapper">
                                         <label class="portion-label">Select Portion</label>
-                                        <select class="portion-select" onchange="onPortionChange(this, @item.Id)">
+                                        <select class="portion-select" 
+                                                x-init="setPortion(@item.Id, $el.value, parseFloat($el.options[$el.selectedIndex].getAttribute('data-price')))"
+                                                x-on:change="setPortion(@item.Id, $el.value, parseFloat($el.options[$el.selectedIndex].getAttribute('data-price')))">
                                             @foreach (var port in item.Portions)
                                             {
                                                 <option value="@port.Name" data-price="@port.Price">@port.Name - ₹@port.Price</option>
@@ -1317,28 +1334,33 @@
                                 else if (firstPortion != null)
                                 {
                                     <!-- Hidden select to simplify cart JS logic -->
-                                    <select class="portion-select" style="display:none;">
+                                    <select class="portion-select" style="display:none;"
+                                            x-init="setPortion(@item.Id, '@firstPortion.Name', @firstPortion.Price)">
                                         <option value="@firstPortion.Name" data-price="@firstPortion.Price">@firstPortion.Name</option>
                                     </select>
                                 }
 
                                 <div class="price-display-row">
                                     <span class="price-label">Price</span>
-                                    <span class="price-value" id="price-val-@item.Id">₹@(firstPortion?.Price ?? 0)</span>
+                                    <span class="price-value" x-text="'₹' + getItemPrice(@item.Id, @(firstPortion?.Price ?? 0)).toFixed(2)"></span>
                                 </div>
                             </div>
 
                             <!-- Cart CTA wrapper -->
-                            <div id="cart-cta-wrapper-@item.Id">
-                                <button class="add-to-cart-btn" onclick="addToCart(@item.Id)">
+                            <div>
+                                <button class="add-to-cart-btn" 
+                                        x-show="getCartItemQty(@item.Id, '@(firstPortion?.Name ?? "Regular")') === 0"
+                                        x-on:click="addToCart(@item.Id, $el.closest('.menu-card').getAttribute('data-item-name'), '@(firstPortion?.Name ?? "Regular")', @(firstPortion?.Price ?? 0))">
                                     <i class="bi bi-plus-circle"></i>
                                     <span>Add to Order</span>
                                 </button>
                                 
-                                <div class="qty-controls" id="qty-ctrls-@item.Id">
-                                    <button class="qty-btn" onclick="adjustQty(@item.Id, -1)"><i class="bi bi-dash"></i></button>
-                                    <span class="qty-number" id="qty-num-@item.Id">1</span>
-                                    <button class="qty-btn" onclick="adjustQty(@item.Id, 1)"><i class="bi bi-plus"></i></button>
+                                <div class="qty-controls" 
+                                     x-show="getCartItemQty(@item.Id, '@(firstPortion?.Name ?? "Regular")') > 0"
+                                     style="display: flex;">
+                                    <button class="qty-btn" x-on:click="adjustQty(@item.Id, '@(firstPortion?.Name ?? "Regular")', @(firstPortion?.Price ?? 0), -1)"><i class="bi bi-dash"></i></button>
+                                    <span class="qty-number" x-text="getCartItemQty(@item.Id, '@(firstPortion?.Name ?? "Regular")')"></span>
+                                    <button class="qty-btn" x-on:click="adjustQty(@item.Id, '@(firstPortion?.Name ?? "Regular")', @(firstPortion?.Price ?? 0), 1)"><i class="bi bi-plus"></i></button>
                                 </div>
                             </div>
                         </div>
@@ -1349,76 +1371,93 @@
     </section>
 
     <!-- Slide-Out Shopping Cart Panel -->
-    <div class="cart-overlay" id="cart-sidebar-overlay" onclick="toggleCart(false)"></div>
-    <div class="cart-panel" id="cart-sidebar">
+    <div class="cart-overlay" :class="{ 'active': cartOpen }" x-on:click="cartOpen = false"></div>
+    <div class="cart-panel" :class="{ 'active': cartOpen }" id="cart-sidebar">
         <div class="cart-header">
             <h3 style="font-size: 20px; font-weight: 700;"><i class="bi bi-bag-check" style="color: var(--brand-primary); margin-right: 8px;"></i>Your Order</h3>
-            <button class="cart-close-btn" onclick="toggleCart(false)">&times;</button>
+            <button class="cart-close-btn" x-on:click="cartOpen = false">&times;</button>
         </div>
         
         <div class="cart-items-list" id="cart-items-container">
-            <!-- Empty state is default -->
-            <div class="cart-empty-state" id="cart-empty-msg">
+            <!-- Empty state -->
+            <div class="cart-empty-state" x-show="cart.length === 0" style="display: flex;">
                 <i class="bi bi-cart-x"></i>
                 <p>Your cart is empty.<br>Add some delicious meals from the menu to get started!</p>
             </div>
+
+            <!-- Cart Items loop -->
+            <template x-for="item in cart" :key="item.itemId + '_' + item.portion">
+                <div class="cart-item">
+                    <div class="cart-item-info">
+                        <div class="cart-item-name" x-text="item.name"></div>
+                        <div class="cart-item-portion" x-text="item.portion"></div>
+                        <div class="cart-item-price" x-text="'₹' + item.price.toFixed(2)"></div>
+                    </div>
+                    <div class="cart-item-actions">
+                        <button class="cart-item-btn" x-on:click="adjustItemQtyFromCart(item.itemId, item.portion, -1)" title="Decrease Quantity"><i class="bi bi-minus"></i></button>
+                        <span class="cart-item-qty" x-text="item.quantity"></span>
+                        <button class="cart-item-btn" x-on:click="adjustItemQtyFromCart(item.itemId, item.portion, 1)" title="Increase Quantity"><i class="bi bi-plus"></i></button>
+                        <button class="cart-item-btn" x-on:click="removeItemFromCart(item.itemId, item.portion)" style="margin-left: 8px; color: #dc3545; border-color: rgba(220, 53, 69, 0.2);" title="Remove Item"><i class="bi bi-trash"></i></button>
+                    </div>
+                </div>
+            </template>
         </div>
         
-        <div class="cart-summary" id="cart-checkout-summary" style="display: none;">
+        <div class="cart-summary" x-show="cart.length > 0">
             <div class="summary-row">
                 <span>Subtotal</span>
-                <span id="summary-subtotal">₹0.00</span>
+                <span x-text="'₹' + subtotal.toFixed(2)"></span>
             </div>
             <div class="summary-row">
                 <span>GST (5%)</span>
-                <span id="summary-gst">₹0.00</span>
+                <span x-text="'₹' + gst.toFixed(2)"></span>
             </div>
             <div class="summary-row">
                 <span>Packaging / Service</span>
-                <span id="summary-packaging">₹20.00</span>
+                <span x-text="'₹' + packagingFee.toFixed(2)"></span>
             </div>
             <div class="summary-row total">
                 <span>Grand Total</span>
-                <span id="summary-grandtotal">₹0.00</span>
+                <span x-text="'₹' + grandTotal.toFixed(2)"></span>
             </div>
             
             <!-- Checkout Form -->
-            <form class="checkout-form" id="checkout-form-details" onsubmit="submitLandingOrder(event)">
+            <form class="checkout-form" x-on:submit.prevent="submitLandingOrder">
                 <div class="form-group">
                     <label class="form-label" for="cust-name">Customer Name *</label>
-                    <input type="text" id="cust-name" class="form-input" placeholder="Enter your full name" required>
+                    <input type="text" id="cust-name" class="form-input" placeholder="Enter your full name" x-model="custName" required>
                 </div>
                 <div class="form-group">
                     <label class="form-label" for="cust-phone">Mobile Number *</label>
-                    <input type="tel" id="cust-phone" class="form-input" placeholder="10-digit mobile number" pattern="[0-9]{10}" required>
+                    <input type="tel" id="cust-phone" class="form-input" placeholder="10-digit mobile number" pattern="[0-9]{10}" x-model="custPhone" required>
                 </div>
                 <div class="form-group">
                     <label class="form-label" for="cust-order-type">Dining Preference</label>
-                    <select id="cust-order-type" class="form-select" onchange="toggleOrderTypeDetails(this.value)">
+                    <select id="cust-order-type" class="form-select" x-model="custOrderType">
                         <option value="DineIn">Dine-in (At Restaurant)</option>
                         <option value="Takeaway">Takeaway (Pick up)</option>
                         <option value="Delivery">Home Delivery</option>
                     </select>
                 </div>
-                <div class="form-group" id="group-table-number">
+                <div class="form-group" id="group-table-number" x-show="custOrderType === 'DineIn'">
                     <label class="form-label" for="cust-table">Table Number</label>
-                    <input type="text" id="cust-table" class="form-input" placeholder="e.g. Table 4">
+                    <input type="text" id="cust-table" class="form-input" placeholder="e.g. Table 4" x-model="custTable">
                 </div>
-                <div class="form-group" id="group-delivery-address" style="display: none;">
+                <div class="form-group" id="group-delivery-address" x-show="custOrderType === 'Delivery'">
                     <label class="form-label" for="cust-address">Delivery Address *</label>
-                    <input type="text" id="cust-address" class="form-input" placeholder="Street, Flat/House No, LandMark">
+                    <input type="text" id="cust-address" class="form-input" placeholder="Street, Flat/House No, LandMark" x-model="custAddress" :required="custOrderType === 'Delivery'">
                 </div>
                 
-                <button type="submit" class="checkout-submit-btn" id="btn-submit-order">
-                    <i class="bi bi-check2-circle"></i>
-                    <span>Confirm &amp; Place Order</span>
+                <button type="submit" class="checkout-submit-btn" :disabled="isSubmitting">
+                    <i :class="isSubmitting ? 'bi bi-hourglass-split' : 'bi bi-check2-circle'"></i>
+                    <span x-text="isSubmitting ? 'Processing Order...' : 'Confirm & Place Order'"></span>
                 </button>
             </form>
         </div>
     </div>
 
     <!-- Order Success Modal Dialog -->
-    <div class="modal-overlay" id="order-success-modal-overlay">
+    <div class="modal-overlay" :class="{ 'active': showSuccessModal }">
         <div class="success-modal">
             <div class="success-icon-wrapper">
                 <i class="bi bi-check2"></i>
@@ -1429,19 +1468,19 @@
             <div class="order-detail-card">
                 <div class="order-detail-row">
                     <span>Order Reference ID:</span>
-                    <strong id="modal-order-ref">#ORD-1002</strong>
+                    <strong x-text="successOrderRef"></strong>
                 </div>
                 <div class="order-detail-row">
                     <span>Customer Name:</span>
-                    <strong id="modal-cust-name">John Doe</strong>
+                    <strong x-text="successCustName"></strong>
                 </div>
                 <div class="order-detail-row">
                     <span>Grand Total Paid/Owed:</span>
-                    <strong id="modal-grand-total" style="color: var(--brand-primary)">₹540.00</strong>
+                    <strong style="color: var(--brand-primary)" x-text="successGrandTotal"></strong>
                 </div>
             </div>
             
-            <button class="btn btn-primary" onclick="closeSuccessModal()" style="width: 100%; justify-content: center;">
+            <button class="btn btn-primary" x-on:click="showSuccessModal = false" style="width: 100%; justify-content: center;">
                 Back to Menu &amp; Order Again
             </button>
         </div>
@@ -1492,375 +1531,223 @@
     </footer>
 
     <!-- Scripting for cart dynamics, tab filters, and AJAX submissions -->
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script>
-        // Global variables for Filter State
-        let activeCategory = 'all';
-        let activeDiet = 'all';
-        
-        // Cart state in memory
-        let cart = [];
-
-        // Smooth scroll for nav items
-        $(document).on('click', 'a[href^="#"]', function (event) {
-            if (this.hash !== "") {
-                event.preventDefault();
-                let hash = this.hash;
-                $('html, body').animate({
-                    scrollTop: $(hash).offset().top - 110
-                }, 600);
-            }
-        });
-
-        // Portion Selector Callback
-        function onPortionChange(selectEl, itemId) {
-            const selectedOpt = selectEl.options[selectEl.selectedIndex];
-            const price = parseFloat(selectedOpt.getAttribute('data-price'));
-            
-            // Update UI price display
-            document.getElementById(`price-val-${itemId}`).innerText = `₹${price.toFixed(2)}`;
-            
-            // If item is already in cart, update its portion and price
-            const cartItemIndex = cart.findIndex(i => i.itemId === itemId);
-            if (cartItemIndex > -1) {
-                // If portion matches, adjust. If it is a different portion, we can update or add a new entry.
-                // In this simple UI, we update the existing card's selected portion state.
-                cart[cartItemIndex].portion = selectedOpt.value;
-                cart[cartItemIndex].price = price;
-                updateCartUI();
-            }
-        }
-
-        // Add to Cart
-        function addToCart(itemId) {
-            const cardEl = document.querySelector(`.menu-card[data-item-id="${itemId}"]`);
-            const itemName = cardEl.getAttribute('data-item-name');
-            const portionSelect = cardEl.querySelector('.portion-select');
-            
-            let portionName = "Regular";
-            let price = 0;
-            
-            if (portionSelect) {
-                const opt = portionSelect.options[portionSelect.selectedIndex];
-                portionName = opt.value;
-                price = parseFloat(opt.getAttribute('data-price'));
-            } else {
-                // Read from static price display if no select exists
-                const priceValText = document.getElementById(`price-val-${itemId}`).innerText;
-                price = parseFloat(priceValText.replace('₹', ''));
-            }
-
-            // Find if item with same portion already in cart
-            const existingIndex = cart.findIndex(item => item.itemId === itemId && item.portion === portionName);
-            if (existingIndex > -1) {
-                cart[existingIndex].quantity += 1;
-            } else {
-                cart.push({
-                    itemId: itemId,
-                    name: itemName,
-                    portion: portionName,
-                    price: price,
-                    quantity: 1
-                });
-            }
-
-            // Update item quantity display on the menu card
-            updateCardQtyDisplay(itemId);
-            
-            // Update Cart Side Panel and Badge
-            updateCartUI();
-        }
-
-        // Adjust quantity from menu card UI buttons
-        function adjustQty(itemId, change) {
-            // Find current portion selected on card
-            const cardEl = document.querySelector(`.menu-card[data-item-id="${itemId}"]`);
-            const portionSelect = cardEl.querySelector('.portion-select');
-            const portionName = portionSelect ? portionSelect.value : "Regular";
-            
-            const itemIndex = cart.findIndex(item => item.itemId === itemId && item.portion === portionName);
-            if (itemIndex > -1) {
-                cart[itemIndex].quantity += change;
-                if (cart[itemIndex].quantity <= 0) {
-                    cart.splice(itemIndex, 1);
-                }
-            } else if (change > 0) {
-                addToCart(itemId);
-                return;
-            }
-            
-            updateCardQtyDisplay(itemId);
-            updateCartUI();
-        }
-
-        // Helper to update menu card's buttons based on cart
-        function updateCardQtyDisplay(itemId) {
-            const cardEl = document.querySelector(`.menu-card[data-item-id="${itemId}"]`);
-            if (!cardEl) return;
-
-            const portionSelect = cardEl.querySelector('.portion-select');
-            const portionName = portionSelect ? portionSelect.value : "Regular";
-
-            const btnAdd = cardEl.querySelector('.add-to-cart-btn');
-            const ctrlsQty = cardEl.querySelector('.qty-controls');
-            const numQty = cardEl.querySelector('.qty-number');
-
-            const cartItem = cart.find(item => item.itemId === itemId && item.portion === portionName);
-
-            if (cartItem && cartItem.quantity > 0) {
-                btnAdd.style.display = 'none';
-                ctrlsQty.style.display = 'flex';
-                numQty.innerText = cartItem.quantity;
-            } else {
-                btnAdd.style.display = 'flex';
-                ctrlsQty.style.display = 'none';
-            }
-        }
-
-        // Toggle Sidebar visibility
-        function toggleCart(open) {
-            const sidebar = document.getElementById('cart-sidebar');
-            const overlay = document.getElementById('cart-sidebar-overlay');
-            if (open) {
-                sidebar.classList.add('active');
-                overlay.classList.add('active');
-            } else {
-                sidebar.classList.remove('active');
-                overlay.classList.remove('active');
-            }
-        }
-
-        // Update Cart Sidepanel UI
-        function updateCartUI() {
-            const container = document.getElementById('cart-items-container');
-            const emptyMsg = document.getElementById('cart-empty-msg');
-            const summaryDiv = document.getElementById('cart-checkout-summary');
-            
-            // Clear current list
-            container.innerHTML = '';
-            
-            // Total badge quantity
-            let totalQty = cart.reduce((sum, item) => sum + item.quantity, 0);
-            document.getElementById('cart-total-badge').innerText = totalQty;
-
-            if (cart.length === 0) {
-                container.appendChild(emptyMsg);
-                emptyMsg.style.display = 'flex';
-                summaryDiv.style.display = 'none';
-                return;
-            }
-
-            emptyMsg.style.display = 'none';
-            summaryDiv.style.display = 'block';
-
-            let subtotal = 0;
-
-            cart.forEach(item => {
-                const itemTotal = item.price * item.quantity;
-                subtotal += itemTotal;
-
-                const cartItemHtml = `
-                    <div class="cart-item">
-                        <div class="cart-item-info">
-                            <div class="cart-item-name">${item.name}</div>
-                            <div class="cart-item-portion">${item.portion}</div>
-                            <div class="cart-item-price">₹${item.price.toFixed(2)}</div>
-                        </div>
-                        <div class="cart-item-actions">
-                            <button class="cart-item-btn" onclick="adjustItemQtyFromCart(${item.itemId}, '${item.portion}', -1)"><i class="bi bi-minus"></i></button>
-                            <span class="cart-item-qty">${item.quantity}</span>
-                            <button class="cart-item-btn" onclick="adjustItemQtyFromCart(${item.itemId}, '${item.portion}', 1)"><i class="bi bi-plus"></i></button>
-                        </div>
-                    </div>
-                `;
-                container.insertAdjacentHTML('beforeend', cartItemHtml);
-            });
-
-            // Calculations
-            const gst = subtotal * 0.05;
-            const packaging = document.getElementById('cust-order-type').value === 'Delivery' ? 40 : 20;
-            const grandTotal = subtotal + gst + packaging;
-
-            document.getElementById('summary-subtotal').innerText = `₹${subtotal.toFixed(2)}`;
-            document.getElementById('summary-gst').innerText = `₹${gst.toFixed(2)}`;
-            document.getElementById('summary-packaging').innerText = `₹${packaging.toFixed(2)}`;
-            document.getElementById('summary-grandtotal').innerText = `₹${grandTotal.toFixed(2)}`;
-            
-            // Keep card buttons synced
-            document.querySelectorAll('.menu-card').forEach(card => {
-                const id = parseInt(card.getAttribute('data-item-id'));
-                updateCardQtyDisplay(id);
-            });
-        }
-
-        // Adjust item quantity inside the sidebar cart panel
-        function adjustItemQtyFromCart(itemId, portion, change) {
-            const index = cart.findIndex(item => item.itemId === itemId && item.portion === portion);
-            if (index > -1) {
-                cart[index].quantity += change;
-                if (cart[index].quantity <= 0) {
-                    cart.splice(index, 1);
-                }
-            }
-            updateCartUI();
-        }
-
-        // Dynamic checkout options
-        function toggleOrderTypeDetails(value) {
-            const tableGroup = document.getElementById('group-table-number');
-            const addressGroup = document.getElementById('group-delivery-address');
-            const addressInput = document.getElementById('cust-address');
-
-            if (value === 'DineIn') {
-                tableGroup.style.display = 'flex';
-                addressGroup.style.display = 'none';
-                addressInput.removeAttribute('required');
-            } else if (value === 'Delivery') {
-                tableGroup.style.display = 'none';
-                addressGroup.style.display = 'flex';
-                addressInput.setAttribute('required', 'required');
-            } else {
-                tableGroup.style.display = 'none';
-                addressGroup.style.display = 'none';
-                addressInput.removeAttribute('required');
-            }
-            // Update delivery fee accordingly
-            updateCartUI();
-        }
-
-        // Dynamic Menu Category Filters
-        function setCategoryFilter(categoryId) {
-            activeCategory = categoryId;
-            
-            // Set active pill class
-            document.querySelectorAll('.category-tab').forEach(tab => {
-                if (tab.getAttribute('data-category-id') === categoryId.toString()) {
-                    tab.classList.add('active');
-                } else {
-                    tab.classList.remove('active');
-                }
-            });
-            
-            applyMenuFilters();
-        }
-
-        // Dynamic Menu Diet Filters
-        function setDietFilter(diet) {
-            activeDiet = diet;
-            
-            // Set active diet button class
-            document.querySelectorAll('.diet-btn').forEach(btn => {
-                if (btn.getAttribute('data-diet') === diet) {
-                    btn.classList.add('active');
-                } else {
-                    btn.classList.remove('active');
-                }
-            });
-            
-            applyMenuFilters();
-        }
-
-        // Realtime Search Filter
-        function filterMenu() {
-            applyMenuFilters();
-        }
-
-        // Core filter logic matching Category, Preference, and Search Query
-        function applyMenuFilters() {
-            const query = document.getElementById('menu-search').value.toLowerCase().trim();
-            const cards = document.querySelectorAll('.menu-card');
-
-            cards.forEach(card => {
-                const itemDiets = card.getAttribute('data-diet-pref');
-                const categoryIds = card.getAttribute('data-category-ids').split(',');
-                const text = card.getAttribute('data-search-text');
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('restaurantApp', () => ({
+                activeCategory: 'all',
+                activeDiet: 'all',
+                searchQuery: '',
+                cart: [],
+                cartOpen: false,
+                showSuccessModal: false,
+                successOrderRef: '',
+                successCustName: '',
+                successGrandTotal: '₹0.00',
                 
-                let matchesCategory = (activeCategory === 'all' || categoryIds.includes(activeCategory.toString()));
-                let matchesDiet = (activeDiet === 'all' || itemDiets === activeDiet);
-                let matchesSearch = (query === '' || text.includes(query));
+                // Form details
+                custName: '',
+                custPhone: '',
+                custOrderType: 'DineIn',
+                custTable: '',
+                custAddress: '',
+                isSubmitting: false,
 
-                if (matchesCategory && matchesDiet && matchesSearch) {
-                    card.style.display = 'flex';
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-        }
+                // Portions selected for each item: { itemId: { name: 'Regular', price: 150 } }
+                selectedPortions: {},
 
-        // Submit checkout via AJAX
-        function submitLandingOrder(e) {
-            e.preventDefault();
-            
-            const btnSubmit = document.getElementById('btn-submit-order');
-            btnSubmit.setAttribute('disabled', 'disabled');
-            btnSubmit.innerHTML = `<i class="bi bi-hourglass-split"></i> <span>Processing Order...</span>`;
-
-            const name = document.getElementById('cust-name').value.trim();
-            const phone = document.getElementById('cust-phone').value.trim();
-            const orderType = document.getElementById('cust-order-type').value;
-            const tableNum = document.getElementById('cust-table').value.trim();
-            const address = document.getElementById('cust-address').value.trim();
-
-            const orderItems = cart.map(item => ({
-                foodItemId: item.itemId,
-                portionName: item.portion,
-                price: item.price,
-                quantity: item.quantity
-            }));
-
-            const payload = {
-                customerName: name,
-                mobileNumber: phone,
-                orderType: orderType,
-                tableNumber: orderType === 'DineIn' ? tableNum : null,
-                deliveryAddress: orderType === 'Delivery' ? address : null,
-                items: orderItems
-            };
-
-            // Perform POST Request
-            fetch('/Home/PlaceLandingOrder', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
+                // Get currently selected portion name for an item
+                getSelectedPortionName(itemId, defaultPortionName) {
+                    if (!this.selectedPortions[itemId]) {
+                        this.selectedPortions[itemId] = { name: defaultPortionName, price: 0 };
+                    }
+                    return this.selectedPortions[itemId].name;
                 },
-                body: JSON.stringify(payload)
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    // Show success modal
-                    document.getElementById('modal-order-ref').innerText = `#ORD-${data.orderId}`;
-                    document.getElementById('modal-cust-name').innerText = name;
-                    
-                    const grandTotalText = document.getElementById('summary-grandtotal').innerText;
-                    document.getElementById('modal-grand-total').innerText = grandTotalText;
 
-                    document.getElementById('order-success-modal-overlay').classList.add('active');
+                // Set selected portion for an item
+                setPortion(itemId, name, price) {
+                    this.selectedPortions[itemId] = { name, price };
                     
-                    // Clear cart
-                    cart = [];
-                    updateCartUI();
-                    toggleCart(false);
-                    document.getElementById('checkout-form-details').reset();
-                    toggleOrderTypeDetails('DineIn');
-                } else {
-                    alert(data.message || "An error occurred while placing the order. Please try again.");
+                    // If item is already in the cart, sync its portion and price
+                    const cartItem = this.cart.find(i => i.itemId === itemId);
+                    if (cartItem) {
+                        cartItem.portion = name;
+                        cartItem.price = price;
+                    }
+                },
+
+                // Get current price of an item
+                getItemPrice(itemId, defaultPrice) {
+                    if (this.selectedPortions[itemId] && this.selectedPortions[itemId].price > 0) {
+                        return this.selectedPortions[itemId].price;
+                    }
+                    return defaultPrice;
+                },
+
+                // Add to cart
+                addToCart(itemId, name, defaultPortion, defaultPrice) {
+                    let portion = defaultPortion;
+                    let price = defaultPrice;
+                    if (this.selectedPortions[itemId]) {
+                        portion = this.selectedPortions[itemId].name;
+                        price = this.selectedPortions[itemId].price || defaultPrice;
+                    } else {
+                        this.selectedPortions[itemId] = { name: portion, price: price };
+                    }
+
+                    const existingIndex = this.cart.findIndex(item => item.itemId === itemId && item.portion === portion);
+                    if (existingIndex > -1) {
+                        this.cart[existingIndex].quantity += 1;
+                    } else {
+                        this.cart.push({
+                            itemId: itemId,
+                            name: name,
+                            portion: portion,
+                            price: price,
+                            quantity: 1
+                        });
+                    }
+                },
+
+                // Get quantity in cart for the current portion
+                getCartItemQty(itemId, defaultPortion) {
+                    const portion = this.selectedPortions[itemId] ? this.selectedPortions[itemId].name : defaultPortion;
+                    const cartItem = this.cart.find(item => item.itemId === itemId && item.portion === portion);
+                    return cartItem ? cartItem.quantity : 0;
+                },
+
+                // Adjust quantity from menu card UI buttons
+                adjustQty(itemId, defaultPortion, defaultPrice, change) {
+                    let portion = defaultPortion;
+                    if (this.selectedPortions[itemId]) {
+                        portion = this.selectedPortions[itemId].name;
+                    }
+                    const itemIndex = this.cart.findIndex(item => item.itemId === itemId && item.portion === portion);
+                    if (itemIndex > -1) {
+                        this.cart[itemIndex].quantity += change;
+                        if (this.cart[itemIndex].quantity <= 0) {
+                            this.cart.splice(itemIndex, 1);
+                        }
+                    } else if (change > 0) {
+                        this.addToCart(itemId, '', defaultPortion, defaultPrice);
+                    }
+                },
+
+                // Adjust quantity inside sidebar cart list
+                adjustItemQtyFromCart(itemId, portion, change) {
+                    const index = this.cart.findIndex(item => item.itemId === itemId && item.portion === portion);
+                    if (index > -1) {
+                        this.cart[index].quantity += change;
+                        if (this.cart[index].quantity <= 0) {
+                            this.cart.splice(index, 1);
+                        }
+                    }
+                },
+
+                // Remove item entirely from the cart
+                removeItemFromCart(itemId, portion) {
+                    const index = this.cart.findIndex(item => item.itemId === itemId && item.portion === portion);
+                    if (index > -1) {
+                        this.cart.splice(index, 1);
+                    }
+                },
+
+                // Totals
+                get subtotal() {
+                    return this.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                },
+
+                get gst() {
+                    return this.subtotal * 0.05;
+                },
+
+                get packagingFee() {
+                    if (this.cart.length === 0) return 0;
+                    return this.custOrderType === 'Delivery' ? 40 : 20;
+                },
+
+                get grandTotal() {
+                    if (this.cart.length === 0) return 0;
+                    return this.subtotal + this.gst + this.packagingFee;
+                },
+
+                get totalQty() {
+                    return this.cart.reduce((sum, item) => sum + item.quantity, 0);
+                },
+
+                // Visibility matching filters
+                matchesFilter(itemId, categoryIdsStr, dietPref, el) {
+                    const categoryIds = categoryIdsStr.split(',');
+                    const matchesCategory = (this.activeCategory === 'all' || categoryIds.includes(this.activeCategory.toString()));
+                    const matchesDiet = (this.activeDiet === 'all' || dietPref === this.activeDiet);
+                    
+                    const q = this.searchQuery.toLowerCase().trim();
+                    const searchText = el ? el.getAttribute('data-search-text') || '' : '';
+                    const matchesSearch = (q === '' || searchText.includes(q));
+
+                    return matchesCategory && matchesDiet && matchesSearch;
+                },
+
+                // Order submission
+                submitLandingOrder() {
+                    if (this.isSubmitting) return;
+                    this.isSubmitting = true;
+
+                    const orderItems = this.cart.map(item => ({
+                        foodItemId: item.itemId,
+                        portionName: item.portion,
+                        price: item.price,
+                        quantity: item.quantity
+                    }));
+
+                    const payload = {
+                        customerName: this.custName.trim(),
+                        mobileNumber: this.custPhone.trim(),
+                        orderType: this.custOrderType,
+                        tableNumber: this.custOrderType === 'DineIn' ? this.custTable.trim() : null,
+                        deliveryAddress: this.custOrderType === 'Delivery' ? this.custAddress.trim() : null,
+                        items: orderItems
+                    };
+
+                    fetch('/Home/PlaceLandingOrder', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(payload)
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            this.successOrderRef = `#ORD-${data.orderId}`;
+                            this.successCustName = this.custName.trim();
+                            this.successGrandTotal = `₹${this.grandTotal.toFixed(2)}`;
+                            
+                            this.showSuccessModal = true;
+                            
+                            // Clear cart
+                            this.cart = [];
+                            this.cartOpen = false;
+                            
+                            // Reset form
+                            this.custName = '';
+                            this.custPhone = '';
+                            this.custOrderType = 'DineIn';
+                            this.custTable = '';
+                            this.custAddress = '';
+                        } else {
+                            alert(data.message || "An error occurred while placing the order. Please try again.");
+                        }
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        alert("Failed to reach server. Please check your internet connection.");
+                    })
+                    .finally(() => {
+                        this.isSubmitting = false;
+                    });
                 }
-            })
-            .catch(err => {
-                console.error(err);
-                alert("Failed to reach server. Please check your internet connection.");
-            })
-            .finally(() => {
-                btnSubmit.removeAttribute('disabled');
-                btnSubmit.innerHTML = `<i class="bi bi-check2-circle"></i> <span>Confirm &amp; Place Order</span>`;
-            });
-        }
-
-        // Close modal
-        function closeSuccessModal() {
-            document.getElementById('order-success-modal-overlay').classList.remove('active');
-        }
+            }));
+        });
     </script>
 </body>
 </html>
