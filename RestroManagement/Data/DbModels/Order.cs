@@ -1,4 +1,4 @@
-﻿using RestroManagement.DbModels.User;
+using RestroManagement.DbModels.User;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -10,7 +10,14 @@ namespace RestroManagement.DbModels
         public int Id { get; set; }
         public string UserId { get; set; } = string.Empty;
 
-        
+        public int? MerchantId { get; set; }
+        [ForeignKey("MerchantId")]
+        public Merchant? Merchant { get; set; }
+
+        public int? StoreId { get; set; }
+        [ForeignKey("StoreId")]
+        public Store? Store { get; set; }
+
         public string CustomerName { get; set; } = string.Empty;
         public string MobileNumber { get; set; } = string.Empty;
         public List<OrderItem> Items { get; set; } = new List<OrderItem>();

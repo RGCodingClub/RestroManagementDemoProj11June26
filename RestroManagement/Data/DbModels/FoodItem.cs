@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace RestroManagement.DbModels
 {
@@ -19,6 +19,10 @@ namespace RestroManagement.DbModels
         
         // Defines if price is fixed per portion or calculated proportionally
         public PriceCalculationMethod PriceCalculationMethod { get; set; } = PriceCalculationMethod.Fixed;    
+
+        public int? MerchantId { get; set; }
+        [System.ComponentModel.DataAnnotations.Schema.ForeignKey("MerchantId")]
+        public Merchant? Merchant { get; set; }
 
         public DateTime Created { get; set; }
         public DateTime LastUpdated { get; set; }

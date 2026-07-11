@@ -19,5 +19,7 @@ namespace RestroManagement.Services
         // Period Management
         public (int Month, int Year) GetSelectedPeriod();
         public void SetSelectedPeriod(int month, int year);
+
+        public int? GetLoggedInUserMerchantId();
     }
 }

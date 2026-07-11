@@ -112,10 +112,32 @@ namespace RestroManagement.Areas.Guest.Controllers
 
             // Create Order
             var user = await _userManager.GetUserAsync(User);
+            
+            int? merchantId = null;
+            int? storeId = null;
+            if (cart.Any())
+            {
+                var firstItemId = cart[0].FoodItemId;
+                var foodItem = await _context.Fooditems.FindAsync(firstItemId);
+                if (foodItem != null)
+                {
+                    merchantId = foodItem.MerchantId;
+                    if (merchantId.HasValue)
+                    {
+                        var store = await _context.Stores.FirstOrDefaultAsync(s => s.MerchantId == merchantId.Value);
+                        if (store != null)
+                        {
+                            storeId = store.UniqueId;
+                        }
+                    }
+                }
+            }
+
             var order = new Order
             {
-
                 UserId = user.Id.ToString(),
+                MerchantId = merchantId,
+                StoreId = storeId,
                 CustomerName = CustomerName,
                 MobileNumber = MobileNumber,
                 OrderDate = DateTime.Now,

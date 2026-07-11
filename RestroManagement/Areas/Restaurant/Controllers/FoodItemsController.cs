@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RestroManagement.Data;
@@ -13,20 +13,24 @@ namespace RestroManagement.Areas.Restaurant.Controllers
     {
         private readonly AppDBContext _context;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly RestroManagement.Services.IAccountService _accountService;
 
-        public FoodItemsController(AppDBContext context, IWebHostEnvironment webHostEnvironment)
+        public FoodItemsController(AppDBContext context, IWebHostEnvironment webHostEnvironment, RestroManagement.Services.IAccountService accountService)
         {
             _context = context;
             _webHostEnvironment = webHostEnvironment;
+            _accountService = accountService;
         }
 
         public async Task<IActionResult> Index()
         {
+            var merchantId = _accountService.GetLoggedInUserMerchantId() ?? 0;
             var items = await _context.Fooditems
                 .Include(f => f.Portions)
                 .Include(f => f.Images)
                 .Include(f => f.Categories)
                     .ThenInclude(fc => fc.Category)
+                .Where(f => f.MerchantId == merchantId)
                 .OrderByDescending(f => f.Created)
                 .ToListAsync();
             return View(items);
@@ -42,6 +46,10 @@ namespace RestroManagement.Areas.Restaurant.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(FoodItem item, int[] selectedCategories, List<IFormFile>? imageFiles, List<string>? externalUrls, int primaryImageIndex)
         {
+            var merchantId = _accountService.GetLoggedInUserMerchantId();
+            if (merchantId == null) return Unauthorized();
+            
+            item.MerchantId = merchantId.Value;
             item.Created = DateTime.Now;
             item.LastUpdated = DateTime.Now;
 
@@ -108,11 +116,12 @@ namespace RestroManagement.Areas.Restaurant.Controllers
         {
             if (id == null) return NotFound();
 
+            var merchantId = _accountService.GetLoggedInUserMerchantId() ?? 0;
             var item = await _context.Fooditems
                 .Include(f => f.Portions)
                 .Include(f => f.Images)
                 .Include(f => f.Categories)
-                .FirstOrDefaultAsync(f => f.Id == id);
+                .FirstOrDefaultAsync(f => f.Id == id && f.MerchantId == merchantId);
 
             if (item == null) return NotFound();
 
@@ -128,10 +137,11 @@ namespace RestroManagement.Areas.Restaurant.Controllers
 
             if (ModelState.IsValid)
             {
+                var merchantId = _accountService.GetLoggedInUserMerchantId() ?? 0;
                 var existingItem = await _context.Fooditems
                     .Include(f => f.Categories)
                     .Include(f => f.Images)
-                    .FirstOrDefaultAsync(f => f.Id == id);
+                    .FirstOrDefaultAsync(f => f.Id == id && f.MerchantId == merchantId);
 
                 if (existingItem == null) return NotFound();
 
@@ -198,6 +208,10 @@ namespace RestroManagement.Areas.Restaurant.Controllers
         [HttpPost]
         public async Task<IActionResult> SetPrimaryImage(int foodItemId, int imageId)
         {
+            var merchantId = _accountService.GetLoggedInUserMerchantId() ?? 0;
+            var itemExists = await _context.Fooditems.AnyAsync(f => f.Id == foodItemId && f.MerchantId == merchantId);
+            if (!itemExists) return NotFound();
+
             var images = await _context.FoodItemImages.Where(i => i.FoodItemId == foodItemId).ToListAsync();
             foreach (var img in images)
             {
@@ -210,7 +224,10 @@ namespace RestroManagement.Areas.Restaurant.Controllers
         [HttpPost]
         public async Task<IActionResult> DeleteImage(int id)
         {
-            var image = await _context.FoodItemImages.FindAsync(id);
+            var merchantId = _accountService.GetLoggedInUserMerchantId() ?? 0;
+            var image = await _context.FoodItemImages
+                .Include(i => i.FoodItem)
+                .FirstOrDefaultAsync(i => i.Id == id && i.FoodItem!.MerchantId == merchantId);
             if (image != null)
             {
                 int foodItemId = image.FoodItemId;
@@ -247,6 +264,10 @@ namespace RestroManagement.Areas.Restaurant.Controllers
         [HttpPost]
         public async Task<IActionResult> AddPortion(FoodItemPortion portion)
         {
+            var merchantId = _accountService.GetLoggedInUserMerchantId() ?? 0;
+            var itemExists = await _context.Fooditems.AnyAsync(f => f.Id == portion.FoodItemId && f.MerchantId == merchantId);
+            if (!itemExists) return NotFound();
+
             if (ModelState.IsValid)
             {
                 _context.FoodItemPortions.Add(portion);
@@ -258,7 +279,10 @@ namespace RestroManagement.Areas.Restaurant.Controllers
 
         public async Task<IActionResult> DeletePortion(int id)
         {
-            var portion = await _context.FoodItemPortions.FindAsync(id);
+            var merchantId = _accountService.GetLoggedInUserMerchantId() ?? 0;
+            var portion = await _context.FoodItemPortions
+                .Include(p => p.FoodItem)
+                .FirstOrDefaultAsync(p => p.Id == id && p.FoodItem!.MerchantId == merchantId);
             if (portion != null)
             {
                 int foodItemId = portion.FoodItemId;
@@ -271,7 +295,8 @@ namespace RestroManagement.Areas.Restaurant.Controllers
 
         public async Task<IActionResult> Delete(int id)
         {
-            var item = await _context.Fooditems.FindAsync(id);
+            var merchantId = _accountService.GetLoggedInUserMerchantId() ?? 0;
+            var item = await _context.Fooditems.FirstOrDefaultAsync(f => f.Id == id && f.MerchantId == merchantId);
             if (item != null)
             {
                 _context.Fooditems.Remove(item);

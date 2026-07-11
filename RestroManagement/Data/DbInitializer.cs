@@ -11,8 +11,85 @@ namespace RestroManagement.Data
         {
             context.Database.EnsureCreated();
 
-            // Check if already seeded
-            if (context.Fooditems.Any())
+            // Seed default Merchant if not present
+            var merchant = context.Merchants.FirstOrDefault();
+            if (merchant == null)
+            {
+                merchant = new Merchant
+                {
+                    CompanyName = "Default Restaurant",
+                    BusinessLicense = "LIC-123456",
+                    Description = "Default restaurant seeded by system",
+                    CreatedDate = DateTime.Now,
+                    IsDeleted = false,
+                    IsVerified = true
+                };
+                context.Merchants.Add(merchant);
+                context.SaveChanges();
+            }
+
+            // Seed default Store if not present
+            var store = context.Stores.FirstOrDefault(s => s.MerchantId == merchant.UniqueId);
+            if (store == null)
+            {
+                store = new Store
+                {
+                    MerchantId = merchant.UniqueId,
+                    StoreName = "Default Main Branch",
+                    StoreAddress = "123 Main St, New Delhi, Delhi - 110001",
+                    StoreDescription = "Default main branch store",
+                    CreatedDate = DateTime.Now,
+                    IsActive = true
+                };
+                context.Stores.Add(store);
+                context.SaveChanges();
+            }
+
+            // Update existing/orphaned FoodItems and Orders
+            var orphanedItems = context.Fooditems.Where(f => f.MerchantId == null).ToList();
+            if (orphanedItems.Any())
+            {
+                foreach (var item in orphanedItems)
+                {
+                    item.MerchantId = merchant.UniqueId;
+                }
+                context.SaveChanges();
+            }
+
+            var orphanedOrders = context.Orders.Where(o => o.MerchantId == null).ToList();
+            if (orphanedOrders.Any())
+            {
+                foreach (var order in orphanedOrders)
+                {
+                    order.MerchantId = merchant.UniqueId;
+                    order.StoreId = store.UniqueId;
+                }
+                context.SaveChanges();
+            }
+
+            var existingItemsForAvailability = context.Fooditems.ToList();
+            var existingAvailabilities = context.StoreFoodItemAvailabilities.Select(a => a.FoodItemId).ToHashSet();
+            var newAvailabilities = new List<StoreFoodItemAvailability>();
+            foreach (var item in existingItemsForAvailability)
+            {
+                if (!existingAvailabilities.Contains(item.Id))
+                {
+                    newAvailabilities.Add(new StoreFoodItemAvailability
+                    {
+                        StoreId = store.UniqueId,
+                        FoodItemId = item.Id,
+                        IsAvailable = true
+                    });
+                }
+            }
+            if (newAvailabilities.Any())
+            {
+                context.StoreFoodItemAvailabilities.AddRange(newAvailabilities);
+                context.SaveChanges();
+            }
+
+            // Check if already seeded (now we only check if categories exist)
+            if (context.MenuCategories.Any())
             {
                 return; // DB has been seeded
             }
@@ -41,6 +118,7 @@ namespace RestroManagement.Data
                     DietaryPreference = DietaryPreference.Vegetarian,
                     PriceCalculationMethod = PriceCalculationMethod.Fixed,
                     IsAvailable = true,
+                    MerchantId = merchant.UniqueId,
                     Created = DateTime.Now,
                     LastUpdated = DateTime.Now
                 },
@@ -50,6 +128,7 @@ namespace RestroManagement.Data
                     DietaryPreference = DietaryPreference.NonVegetarian,
                     PriceCalculationMethod = PriceCalculationMethod.Fixed,
                     IsAvailable = true,
+                    MerchantId = merchant.UniqueId,
                     Created = DateTime.Now,
                     LastUpdated = DateTime.Now
                 },
@@ -60,6 +139,7 @@ namespace RestroManagement.Data
                     DietaryPreference = DietaryPreference.Vegetarian,
                     PriceCalculationMethod = PriceCalculationMethod.Fixed,
                     IsAvailable = true,
+                    MerchantId = merchant.UniqueId,
                     Created = DateTime.Now,
                     LastUpdated = DateTime.Now
                 },
@@ -69,6 +149,7 @@ namespace RestroManagement.Data
                     DietaryPreference = DietaryPreference.NonVegetarian,
                     PriceCalculationMethod = PriceCalculationMethod.Fixed,
                     IsAvailable = true,
+                    MerchantId = merchant.UniqueId,
                     Created = DateTime.Now,
                     LastUpdated = DateTime.Now
                 },
@@ -79,6 +160,7 @@ namespace RestroManagement.Data
                     DietaryPreference = DietaryPreference.Vegetarian,
                     PriceCalculationMethod = PriceCalculationMethod.Fixed,
                     IsAvailable = true,
+                    MerchantId = merchant.UniqueId,
                     Created = DateTime.Now,
                     LastUpdated = DateTime.Now
                 },
@@ -89,6 +171,7 @@ namespace RestroManagement.Data
                     DietaryPreference = DietaryPreference.Vegetarian,
                     PriceCalculationMethod = PriceCalculationMethod.Fixed,
                     IsAvailable = true,
+                    MerchantId = merchant.UniqueId,
                     Created = DateTime.Now,
                     LastUpdated = DateTime.Now
                 },
@@ -99,6 +182,7 @@ namespace RestroManagement.Data
                     DietaryPreference = DietaryPreference.Vegetarian,
                     PriceCalculationMethod = PriceCalculationMethod.Proportional,
                     IsAvailable = true,
+                    MerchantId = merchant.UniqueId,
                     Created = DateTime.Now,
                     LastUpdated = DateTime.Now
                 }
@@ -159,6 +243,20 @@ namespace RestroManagement.Data
             };
 
             context.FoodItemCategories.AddRange(mapping);
+            context.SaveChanges();
+
+            // 6. Seed Store Availability
+            var availabilities = new List<StoreFoodItemAvailability>();
+            foreach (var item in items)
+            {
+                availabilities.Add(new StoreFoodItemAvailability
+                {
+                    StoreId = store.UniqueId,
+                    FoodItemId = item.Id,
+                    IsAvailable = true
+                });
+            }
+            context.StoreFoodItemAvailabilities.AddRange(availabilities);
             context.SaveChanges();
         }
     }

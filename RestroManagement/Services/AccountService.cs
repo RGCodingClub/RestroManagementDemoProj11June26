@@ -156,5 +156,17 @@ namespace RestroManagement.Services
             session?.SetInt32("SelectedMonth", month);
             session?.SetInt32("SelectedYear", year);
         }
+
+        public int? GetLoggedInUserMerchantId()
+        {
+            var userIdStr = GetLoggedInUserId();
+            if (int.TryParse(userIdStr, out int userId))
+            {
+                var staff = _dbContext.MerchantStaffs
+                    .FirstOrDefault(ms => ms.UserId == userId);
+                return staff?.MerchantId;
+            }
+            return null;
+        }
     }
 }

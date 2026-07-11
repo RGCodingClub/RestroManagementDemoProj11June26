@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
@@ -21,6 +21,7 @@ namespace RestroManagement.Data
         public DbSet<FoodItemCategory> FoodItemCategories { get; set; }
         public DbSet<FoodItemPortion> FoodItemPortions { get; set; }
         public DbSet<FoodItemImage> FoodItemImages { get; set; }
+        public DbSet<StoreFoodItemAvailability> StoreFoodItemAvailabilities { get; set; }
 
         // Master Data
         public DbSet<Country> Countries { get; set; }
