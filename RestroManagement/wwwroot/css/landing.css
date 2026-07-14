@@ -193,8 +193,84 @@ section {
 }
 
 @media (max-width: 768px) {
-    .hero { text-align: center; }
-    .hero-content { margin: 0 auto; }
+    /* Override flex containers */
+    .container.flex {
+        flex-direction: column !important;
+        gap: 40px !important;
+        align-items: stretch !important;
+    }
+    
+    /* Collapsible flex layouts */
+    .flex:not(.container):not(.no-collapse-mobile) {
+        flex-direction: column !important;
+        gap: 20px !important;
+    }
+    
+    /* Keep small items inline if they have no-collapse-mobile class or are social links */
+    .flex.no-collapse-mobile, .footer-bottom .flex, footer .flex {
+        flex-direction: row !important;
+        gap: 15px !important;
+        justify-content: center !important;
+        align-items: center !important;
+    }
+    
+    .flex-center:not(.no-collapse-mobile) {
+        flex-direction: column !important;
+        gap: 15px !important;
+    }
+    
+    .flex-center.no-collapse-mobile {
+        flex-direction: row !important;
+        flex-wrap: wrap !important;
+        gap: 20px !important;
+    }
+    
+    .hero {
+        text-align: center;
+        padding-top: 100px !important;
+        min-height: auto !important;
+    }
+    .hero-content {
+        margin: 0 auto 30px;
+    }
     .hero h1 { font-size: 2.5rem; }
+    .hero-image {
+        margin-top: 20px;
+    }
+    .floating-stats-card {
+        display: none !important;
+    }
+    .hero-buttons {
+        justify-content: center !important;
+        gap: 12px;
+    }
     .nav-links { display: none; }
+    
+    /* Workflow connector line hiding on mobile */
+    .workflow-line {
+        display: none !important;
+    }
+    
+    /* Reset featured card transform to prevent overlapping */
+    .pricing-card.featured {
+        transform: none !important;
+        margin: 20px 0;
+    }
+    .pricing-card.featured:hover {
+        transform: translateY(-5px) !important;
+    }
+}
+
+@media (max-width: 576px) {
+    .hero h1 {
+        font-size: 2rem !important;
+    }
+    .hero p {
+        font-size: 1rem !important;
+        margin-bottom: 24px;
+    }
+    .btn {
+        width: 100%;
+        justify-content: center;
+    }
 }

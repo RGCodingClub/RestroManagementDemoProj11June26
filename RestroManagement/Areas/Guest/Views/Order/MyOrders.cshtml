@@ -1,4 +1,4 @@
-﻿@model IEnumerable<RestroManagement.DbModels.Order>
+@model IEnumerable<RestroManagement.DbModels.Order>
 
 @{
     ViewData["Title"] = "My Orders";
@@ -68,7 +68,7 @@
                                 ₹@order.OrderTotal.ToString("F2")
                             </div>
                         </div>
-                        <div class="col-md-6 text-end">
+                        <div class="col-md-6 text-md-end order-actions mt-3 mt-md-0">
                             <a asp-action="OrderDetails"
                                asp-route-id="@order.Id"
                                class="btn btn-outline-danger btn-view">

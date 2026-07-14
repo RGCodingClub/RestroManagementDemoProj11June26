@@ -1,4 +1,4 @@
-﻿/* Modern Nav Styles */
+/* Modern Nav Styles */
 nav {
     position: fixed;
     top: 0;
@@ -102,4 +102,80 @@ footer {
     justify-content: space-between;
     align-items: center;
     font-size: 14px;
+}
+
+/* Mobile Landing Menu Toggle button */
+.mobile-landing-menu-btn {
+    display: none;
+    background: transparent;
+    border: none;
+    font-size: 28px;
+    color: var(--text-main);
+    cursor: pointer;
+    padding: 4px;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Mobile Navigation Dropdown */
+.mobile-landing-nav {
+    position: fixed;
+    top: 80px;
+    left: 0;
+    right: 0;
+    background: white;
+    z-index: 999;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+.mobile-landing-list {
+    list-style: none;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.mobile-landing-list a {
+    text-decoration: none;
+    color: var(--text-main);
+    font-weight: 600;
+    font-size: 16px;
+    display: block;
+    padding: 8px 12px;
+    border-radius: 8px;
+    transition: background 0.2s;
+}
+
+.mobile-landing-list a:hover {
+    background: var(--light-bg);
+    color: var(--primary);
+}
+
+@media (max-width: 768px) {
+    .nav-links, .nav-actions {
+        display: none !important;
+    }
+    .mobile-landing-menu-btn {
+        display: flex !important;
+    }
+    .footer-grid {
+        grid-template-columns: 1fr !important;
+        gap: 30px !important;
+    }
+    .footer-col {
+        text-align: center;
+    }
+    .footer-col p {
+        margin: 0 auto 20px !important;
+    }
+    .footer-col .flex {
+        justify-content: center;
+    }
+    .footer-bottom {
+        flex-direction: column !important;
+        text-align: center;
+        gap: 15px;
+    }
 }

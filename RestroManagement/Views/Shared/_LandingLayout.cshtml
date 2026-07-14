@@ -37,8 +37,26 @@
                 <a asp-controller="Account" asp-action="Login" style="text-decoration: none; color: var(--text-main); font-weight: 600;">Login</a>
                 <a asp-controller="Account" asp-action="RegisterMerchant" class="btn btn-primary" style="padding: 10px 20px; font-size: 14px;">Register Restaurant</a>
             </div>
+
+            <!-- Hamburger Menu Button for Mobile -->
+            <button class="mobile-landing-menu-btn d-md-none" aria-label="Toggle Menu">
+                <i class="bi bi-list"></i>
+            </button>
         </div>
     </nav>
+
+    <!-- Mobile Navigation Dropdown -->
+    <div class="mobile-landing-nav" style="display: none;">
+        <ul class="mobile-landing-list">
+            <li><a href="#features">Features</a></li>
+            <li><a href="#hardware">Hardware</a></li>
+            <li><a href="#workflow">Workflow</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+            <hr style="border-color: rgba(0,0,0,0.06); margin: 10px 0;">
+            <li><a asp-controller="Account" asp-action="Login">Login</a></li>
+            <li><a asp-controller="Account" asp-action="RegisterMerchant" class="btn btn-primary text-white text-center" style="border-radius: 50px; font-size: 14px; padding: 10px 20px;">Register Restaurant</a></li>
+        </ul>
+    </div>
 
     <main role="main">
         @RenderBody()
@@ -103,6 +121,19 @@
             $('html, body').animate({
                 scrollTop: $($.attr(this, 'href')).offset().top - 80
             }, 500);
+        });
+
+        // Toggle landing mobile menu
+        $('.mobile-landing-menu-btn').on('click', function() {
+            $('.mobile-landing-nav').slideToggle(200);
+            $(this).find('i').toggleClass('bi-list bi-x-lg');
+        });
+        $('.mobile-landing-list a').on('click', function() {
+            // Only close if it's not the Register button (since we want them to redirect)
+            if (!$(this).hasClass('btn')) {
+                $('.mobile-landing-nav').slideUp(150);
+                $('.mobile-landing-menu-btn').find('i').addClass('bi-list').removeClass('bi-x-lg');
+            }
         });
 
         // Intersection Observer for animations

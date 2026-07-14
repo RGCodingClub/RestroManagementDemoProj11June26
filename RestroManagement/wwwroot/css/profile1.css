@@ -1,4 +1,4 @@
-﻿* {
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -70,16 +70,21 @@ body {
 
 .profile-header {
     background: #3f6f8f;
-    height: 270px;
+    min-height: 270px;
+    height: auto;
     color: white;
+    padding-bottom: 40px;
 }
 
     .profile-header .container {
-        width: 1200px;
+        width: 100%;
+        max-width: 1200px;
         margin: auto;
         display: flex;
         justify-content: space-between;
         padding-top: 60px;
+        padding-left: 20px;
+        padding-right: 20px;
     }
 
 .left {
@@ -114,9 +119,12 @@ body {
 /*================ MAIN ================*/
 
 .main-area {
-    width: 1200px;
+    width: 100%;
+    max-width: 1200px;
     margin: -80px auto 50px;
     display: flex;
+    padding-left: 20px;
+    padding-right: 20px;
 }
 
 /*================ SIDEBAR ================*/
@@ -338,8 +346,30 @@ body {
         gap: 15px;
     }
 
-    .buttons button {
+    .buttons button, .buttons .reorder, .buttons .help {
         width: 100%;
-        margin: 10px 0;
+        margin: 10px 0 !important;
+        margin-left: 0 !important;
+    }
+}
+
+@media(max-width: 576px) {
+    .left {
+        flex-direction: column !important;
+        text-align: center !important;
+    }
+    .profile-img {
+        margin-right: 0 !important;
+        margin-bottom: 15px !important;
+    }
+    .left h2 {
+        font-size: 28px !important;
+    }
+    .left p {
+        font-size: 16px !important;
+    }
+    .edit-btn {
+        width: 100% !important;
+        margin-top: 20px !important;
     }
 }

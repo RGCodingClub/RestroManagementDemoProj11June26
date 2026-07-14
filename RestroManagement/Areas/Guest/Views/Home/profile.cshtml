@@ -1,4 +1,4 @@
-﻿@using RestroManagement.ViewModels
+@using RestroManagement.ViewModels
 @model RestroManagement.ViewModels.profile
 
 <div class="container mt-5">
@@ -37,57 +37,57 @@
 
                             <!-- Profile Details -->
                             <div class="col-md-8">
+                                <div class="table-responsive">
+                                    <table class="table table-borderless">
 
-                                <table class="table table-borderless">
+                                        <tr>
+                                            <th>Guest ID</th>
+                                            <td>GST@Model.Id</td>
+                                        </tr>
 
-                                    <tr>
-                                        <th>Guest ID</th>
-                                        <td>GST@Model.Id</td>
-                                    </tr>
+                                        <tr>
+                                            <th>Email</th>
+                                            <td>@Model.Email</td>
+                                        </tr>
 
-                                    <tr>
-                                        <th>Email</th>
-                                        <td>@Model.Email</td>
-                                    </tr>
+                                        <tr>
+                                            <th>Phone</th>
+                                            <td>@Model.PhoneNumber</td>
+                                        </tr>
 
-                                    <tr>
-                                        <th>Phone</th>
-                                        <td>@Model.PhoneNumber</td>
-                                    </tr>
+                                        <tr>
+                                            <th>Gender</th>
+                                            <td>
+                                                <select asp-for="Gender" class="form-select">
+                                                    <option value="">Select Gender</option>
+                                                    <option value="Male">Male</option>
+                                                    <option value="Female">Female</option>
+                                                    <option value="Other">Other</option>
+                                                </select>
+                                            </td>
+                                        </tr>
 
-                                    <tr>
-                                        <th>Gender</th>
-                                        <td>
-                                            <select asp-for="Gender" class="form-select">
-                                                <option value="">Select Gender</option>
-                                                <option value="Male">Male</option>
-                                                <option value="Female">Female</option>
-                                                <option value="Other">Other</option>
-                                            </select>
-                                        </td>
-                                    </tr>
+                                        <tr>
+                                            <th>Date of Birth</th>
+                                            <td>
+                                                <input asp-for="DateOfBirth"
+                                                       type="date"
+                                                       class="form-control" />
+                                            </td>
+                                        </tr>
 
-                                    <tr>
-                                        <th>Date of Birth</th>
-                                        <td>
-                                            <input asp-for="DateOfBirth"
-                                                   type="date"
-                                                   class="form-control" />
-                                        </td>
-                                    </tr>
-
-                                    <tr>
-                                        <th>Address</th>
-                                        <td>
-                                            <textarea asp-for="Address"
-                                                      class="form-control"
-                                                      rows="3"></textarea>
-                                        </td>
-                                    </tr>
+                                        <tr>
+                                            <th>Address</th>
+                                            <td>
+                                                <textarea asp-for="Address"
+                                                          class="form-control"
+                                                          rows="3"></textarea>
+                                            </td>
+                                        </tr>
 
 
-                                </table>
-
+                                    </table>
+                                </div>
                             </div>
 
                         </div>

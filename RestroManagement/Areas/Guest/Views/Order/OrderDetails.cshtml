@@ -1,7 +1,7 @@
-﻿@model RestroManagement.DbModels.Order
+@model RestroManagement.DbModels.Order
 
 <div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
         <h2>Order Details</h2>
         <a asp-action="MyOrders" class="btn btn-secondary">
             ← Back to My Orders
@@ -38,27 +38,29 @@
             Ordered Items
         </div>
         <div class="card-body">
-            <table class="table table-bordered table-hover">
-                <thead class="table-light">
-                    <tr>
-                        <th>Food Item</th>
-                        <th>Portion</th>
-                        <th>Quantity</th>
-                        <th>Price</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model.Items)
-                    {
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover mb-0">
+                    <thead class="table-light">
                         <tr>
-                            <td>@item.FoodItem?.Name</td>
-                            <td>@item.Portion?.Name</td>
-                            <td>@item.Quantity</td>
-                            <td>₹@item.Price</td>
+                            <th>Food Item</th>
+                            <th>Portion</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
                         </tr>
-                    }
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Items)
+                        {
+                            <tr>
+                                <td>@item.FoodItem?.Name</td>
+                                <td>@item.Portion?.Name</td>
+                                <td>@item.Quantity</td>
+                                <td>₹@item.Price</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
     <div class="card mt-4">
@@ -67,30 +69,32 @@
             Bill Summary
         </div>
         <div class="card-body">
-            <table class="table">
-                <tr>
-                    <td>Subtotal</td>
-                    <td class="text-end">₹@Model.TotalPrice</td>
-                </tr>
-                <tr>
-                    <td>SGST</td>
-                    <td class="text-end">₹@Model.SGST</td>
-                </tr>
-                <tr>
-                    <td>CGST</td>
-                    <td class="text-end">₹@Model.CGST</td>
-                </tr>
-                <tr>
-                    <td>Packaging Charges</td>
-                    <td class="text-end">₹@Model.PackagingCharges</td>
-                </tr>
-                <tr class="table-success fw-bold">
-                    <td>Grand Total</td>
-                    <td class="text-end">
-                        ₹@Model.OrderTotal
-                    </td>
-                </tr>
-            </table>
+            <div class="table-responsive">
+                <table class="table mb-0">
+                    <tr>
+                        <td>Subtotal</td>
+                        <td class="text-end">₹@Model.TotalPrice</td>
+                    </tr>
+                    <tr>
+                        <td>SGST</td>
+                        <td class="text-end">₹@Model.SGST</td>
+                    </tr>
+                    <tr>
+                        <td>CGST</td>
+                        <td class="text-end">₹@Model.CGST</td>
+                    </tr>
+                    <tr>
+                        <td>Packaging Charges</td>
+                        <td class="text-end">₹@Model.PackagingCharges</td>
+                    </tr>
+                    <tr class="table-success fw-bold">
+                        <td>Grand Total</td>
+                        <td class="text-end">
+                            ₹@Model.OrderTotal
+                        </td>
+                    </tr>
+                </table>
+            </div>
         </div>
     </div>
 </div>

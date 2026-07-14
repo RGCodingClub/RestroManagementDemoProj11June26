@@ -1,4 +1,4 @@
-﻿:root {
+:root {
     /* Match main landing palette */
     --primary-color: #E63946; /* landing --primary */
     --primary-hover: #d62d3a;
@@ -17,6 +17,7 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    overflow-x: hidden;
 }
 
 /* Header (light, aligned with landing) */

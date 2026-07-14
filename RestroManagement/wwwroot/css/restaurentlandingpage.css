@@ -39,6 +39,10 @@ body {
     padding: 0 24px;
 }
 
+.flex {
+    display: flex;
+}
+
 /* Typography */
 h1, h2, h3, h4, .serif-font {
     font-family: 'Playfair Display', Georgia, serif;
@@ -127,6 +131,75 @@ header {
         transform: translateY(-2px);
         box-shadow: 0 6px 20px rgba(255, 74, 50, 0.2);
     }
+
+/* Login and Dashboard buttons in Header */
+.login-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    color: var(--brand-dark);
+    border: 2px solid var(--brand-dark);
+    padding: 10px 20px;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 14px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.login-trigger:hover {
+    background: var(--brand-dark);
+    color: var(--white);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--brand-secondary);
+    color: var(--brand-dark);
+    padding: 10px 20px;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 14px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.dashboard-trigger:hover {
+    background: var(--brand-dark);
+    color: var(--brand-secondary);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 176, 31, 0.2);
+}
+
+.logout-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    color: #dc3545;
+    border: 2px solid #dc3545;
+    padding: 10px 20px;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 14px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.logout-trigger:hover {
+    background: #dc3545;
+    color: var(--white);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.2);
+}
 
 .cart-badge {
     background: var(--brand-secondary);
@@ -1176,6 +1249,10 @@ header {
 }
 
 @media (max-width: 768px) {
+    .login-trigger, .dashboard-trigger, .logout-trigger {
+        display: none !important;
+    }
+
     .header-inner {
         height: 80px;
     }
@@ -1355,6 +1432,29 @@ header {
 
     .diet-btn {
         padding: 8px 16px;
+        font-size: 13px;
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+
+    /* Category Tabs Horizontal Scroll on Mobile */
+    .category-tabs {
+        overflow-x: auto;
+        padding-bottom: 8px;
+        scrollbar-width: none;
+        width: 100%;
+        -webkit-overflow-scrolling: touch;
+        justify-content: flex-start;
+        gap: 8px;
+        margin-bottom: 24px;
+    }
+
+    .category-tabs::-webkit-scrollbar {
+        display: none;
+    }
+
+    .category-tab {
+        padding: 8px 18px;
         font-size: 13px;
         white-space: nowrap;
         flex-shrink: 0;

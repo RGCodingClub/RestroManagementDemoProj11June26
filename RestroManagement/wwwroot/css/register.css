@@ -1,4 +1,4 @@
-﻿:root {
+:root {
     --primary-color: #ef4f5f;
     --text-main: #1c1c1c;
     --text-light: #696969;
@@ -26,7 +26,7 @@ body {
     animation: slideUp 0.4s ease-out;
 }
 
-@@keyframes slideUp {
+@keyframes slideUp {
     from {
         opacity: 0;
         transform: translateY(20px);
@@ -134,4 +134,11 @@ body {
     content: " *";
     color: red;
     font-weight: bold;
+}
+
+@media (max-width: 520px) {
+    .signup-container {
+        padding: 24px 16px;
+        margin: 16px;
+    }
 }
